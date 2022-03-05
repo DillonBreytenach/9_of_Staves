@@ -5,5 +5,5 @@ class main(object):
         pass
 
     def greet():
-        #print("hello")
+        #image must be in return
         return ("HELLO")
