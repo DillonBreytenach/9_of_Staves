@@ -5,7 +5,7 @@ MainWidget:
     BoxLayout:
         size_hint: .2, 1
         Button:
-            text: "B1"
+            text: "REFRESH_(NOT_WORKING)"
             size_hint: 1, 1
             pos_hint: {'x': 0, 'y': 0}
     Second_Box:
@@ -17,28 +17,35 @@ MainWidget:
 
         height: self.minimum_height
         width: self.minimum_width
-        #pos_hint: {'x': None, 'y': 1}
         orientation: 'vertical'
-
                 
         Label:
             id: in_com
-            size_hint: 1, 1
-            on_text: root.get_text()
+            size_hint: 1, 1.5
+            # ************************************************
+            on_text: root.get_msg
             pos_hint: {'x': .1, 'y': 0}
         
         TextInput:
             id: msg
             text:'text'
             multiline: False
-            size_hint: 1, .4
-            pos_hint: {'x': 0, 'y': .5}
-            on_text_validate: root.set_text(self)
-        Button:
-            text: "SEND_MSG"
-            size_hint: 1, .5
+            size_hint: 1, 1.6
             pos_hint: {'x': 0, 'y': 0}
-            on_press: root.on_click()
+            on_text_validate: root.set_text(self)
+        
+        BoxLayout:
+            Button:
+                text: "SEND_MSG"
+                size_hint: 1, 1
+                pos_hint: {'x': 0, 'y': 0}
+                on_press: root.on_click()
+
+            Button:
+                text: "GET_MSG(NOT_WORKING)"
+                size_hint: 1, 1
+                pos_hint: {'x': 0, 'y': 0}
+                on_press: root.update()
         
 
 
