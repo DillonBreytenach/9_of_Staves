@@ -31,16 +31,19 @@ class MainWidget(GridLayout):
             
 
 class Second_Box(ScrollView):
+    def on_start(self):
+        Clock.schedule_interval(Second_Box.get_msg, 2)
     
     #CONNECTION
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         except Exception as e:
             print(e)
         self.host = '127.0.0.1'
-        self.port = 8080
+        self.port = 8081
         self.data = ""
         self.text_in = StringProperty("")
         self.encap = "CLIENT_1@"
@@ -64,10 +67,11 @@ class Second_Box(ScrollView):
         except Exception as e:
             print(e)    
     received = ""
-        
-        
+    
+
     def update(self):
-        
+
+
         t = threading.Thread(target=self.get_msg)
         t.daemon = True
         t.start()
@@ -79,8 +83,9 @@ class Second_Box(ScrollView):
         pass
 
             
-    def get_msg(self, **kwargs):
+    def get_msg(self, **args):
         while True:
+            #self.sock.sendall("NEURAL_HANDSHAKE".encode())
             received = ""
             try:
                 received = self.sock.recv(1024 * 3).decode()

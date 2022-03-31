@@ -11,13 +11,16 @@ class server():
         self.CLient_List = set()
         self.msg = []
     
+    
+    
     def handle_client(self, conn, addr, mySocket):
         print("[ADDR]: " + str(addr))
+        
     
         while True:
             data = conn.recv(1024 * 3).decode()
             print("DATA: ", str(data))
-
+            
 
             try:
                 if str(data) == "DISCONN":
@@ -42,12 +45,14 @@ class server():
 
 
                     try:
-                        for cs in self.CLient_List:
-                            print("cs: ", cs)
-                            
-                            cs.send(sending.encode())
-                    
-                        print("[MSG_SENT]: ", sending)
+                        for x in self.CLient_List:
+                            if(x != conn):
+                                try:
+                                    x.sendall(sending.encode())
+                                except Exception as e:
+                                    print(e)
+      
+                            print("[MSG_SENT]: ", sending)
                     except Exception as e:
                         print("[SEND_ALL_FAIL] : ", str(e))
                 except Exception as e:
@@ -63,7 +68,7 @@ class server():
 
     def Main(self):
         host = '127.0.0.1'
-        port = 8080
+        port = 8081
         
         
         addr = (host, port)
