@@ -1,0 +1,41 @@
+Login_Box:
+<Login_Box>:
+    cols: 3
+    size_hint: .5, .9
+    GridLayout:
+        pos_hint: {'x': .1, 'y': .4}
+        size_hint: .5, .5
+        cols: 3
+        #orientation: 'horizontal'
+        #INPUT TEXT
+        TextInput:
+            id: username
+            
+            
+            width: "200dp"
+            text: "NAME"
+            multiline: False
+            on_text_validate: root.save_name(self)
+
+
+    BoxLayout:
+        pos_hint: {'x': .5, 'y': .1}
+    
+        TextInput:
+            id: password
+            size_hint: None, 1
+            width: "200dp"
+            text: "PASSWORD"
+            multiline: False
+            on_text_validate: root.save_password(self)
+    
+    BoxLayout:
+        pos_hint: {'x': .1, 'y': .5}
+        Button:
+            size_hint: .1, .5
+        #    pos_hint: {'x': .1, 'y': .5}
+            text: "SEND_DATA"
+            on_press: root.save_data(self)
+
+        
+
