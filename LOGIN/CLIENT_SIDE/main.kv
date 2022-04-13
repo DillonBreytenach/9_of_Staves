@@ -1,41 +1,180 @@
-Login_Box:
+Page_Layout:
+<Page_Layout@PageLayout>:
+    Login_Box:
+    ProfilePage:
+    Test:
+
+
+
+
+#Login_Box:
 <Login_Box>:
-    cols: 3
-    size_hint: .5, .9
-    GridLayout:
-        pos_hint: {'x': .1, 'y': .4}
-        size_hint: .5, .5
-        cols: 3
-        #orientation: 'horizontal'
-        #INPUT TEXT
-        TextInput:
-            id: username
-            
-            
-            width: "200dp"
-            text: "NAME"
-            multiline: False
-            on_text_validate: root.save_name(self)
+    orientation: 'vertical'
+
+    #MAIN_LABEL
+    Label:
+        id: in_com
+        pos_hint: {'x': .05, 'y': 1}
+        text:'Login/Register'
+        size_hint: 1, .2
+        
+        
+
+    #USERNAME & PASSWORD
+    TextInput:
+        id: username
+        pos_hint: {'x': .2, 'y': .9}
+        size_hint: .7, .1
+        text: "NAME"
+        multiline: False
+        on_text_validate: root.save_name(self)
+
+    TextInput:
+        id: password
+        pos_hint: {'x': .2, 'y': .7}
+        size_hint: .7, .1
+
+        text: "PASSWORD23"
+        multiline: False
+        on_text_validate: root.save_password(self)
 
 
+
+    #DATE OF BIRTH
     BoxLayout:
-        pos_hint: {'x': .5, 'y': .1}
-    
+        pos_hint: {'x': .2, 'y': .5}
+        size_hint: .7, .1
         TextInput:
-            id: password
-            size_hint: None, 1
-            width: "200dp"
-            text: "PASSWORD"
+            id: year
+            text:'1992'
             multiline: False
-            on_text_validate: root.save_password(self)
-    
+            on_text_validate: root.save_year(self)
+
+        TextInput:
+            id: month
+            text:'6'
+            multiline: False
+            on_text_validate: root.save_month(self)
+
+        TextInput:
+            id: day
+            text:'9'
+            multiline: False
+            on_text_validate: root.save_day(self)
+
+
+    #COUNTRY
     BoxLayout:
-        pos_hint: {'x': .1, 'y': .5}
+        pos_hint: {'x': .2, 'y': .4}
+        size_hint: .7, .1     
+        TextInput:
+            id: country
+            text:'COUNTRY'
+            multiline: False
+            on_text_validate: root.save_country(self)   
+
+    
+
+    #MALE/FEMALE
+    BoxLayout:
+        pos_hint: {'x': .4, 'y': .3}
+        size_hint: None, .2
+        orientation: 'horizontal'
+        cols: 2
+        BoxLayout:
+            size_hint: None, .5
+            rows: 2
+            orientation:'vertical'
+            Label:
+                id: male_l
+                text: "MALE"
+            CheckBox:
+                id: male_c
+                on_release: False
+                active: False
+                on_active: root.CheckBox_M(self.active)
+                #active: root.male_c
+
+        BoxLayout:
+            size_hint: None, .5
+            orientation: 'vertical'
+            Label:
+                id: female_l
+                text:'FEMALE'    
+            CheckBox:
+                id: female_c
+                active: False
+                on_active: root.CheckBox_F(self.active)
+                #active: root.female
+
+
+    #LOGIN or REGISTER
+    BoxLayout:
+        size_hint: .7, .2
+        pos_hint: {'x': .2, 'y': .5}
         Button:
-            size_hint: .1, .5
-        #    pos_hint: {'x': .1, 'y': .5}
-            text: "SEND_DATA"
-            on_press: root.save_data(self)
+            id: send_data
+            pos_hint: {'x': 0, 'y': .3}
+            size_hint: .5, .4
+
+            text: "LOGIN"
+            on_press: root.save_data()
+
+        Button:
+            id: send_data
+            pos_hint: {'x': .5, 'y': .3}
+            size_hint: .5, .4
+
+            text: "REGISTER"
+            on_press: root.save_data()
+
+
+
+<ProfilePage>:
+    cols: 2
+    BoxLayout:
+        orientation:'vertical'
+        rows: 4
+        Label:
+            id: Name
+            text: "NAME"
+        Button:
+            text: 'Player_Profile'
+            size_hint: 1, 1
+
+    Button:
+        text: 'PLAYER_PROFILE'
+        size_hint: .5, 1
+
+
+
+<deck>:
+
+    Label:
+        id: test_label
+        text: "WAITING FOR SERVER"
+        size_hint: .2, .2
+
+
+<Test>:
+    cols: 2
+    size_hint: 1, None
+#    deck:
+#    BoxLayout:
+    cols: 4
+    heigh: 200
+    #orientation:'vertical'
+    Button:
+        id: test_button
+        text: "TEST"
+        size_hint: 1, None
+        on_press: root.test_button()
+
+        #CardBox:
+            
+
 
         
+
+
 

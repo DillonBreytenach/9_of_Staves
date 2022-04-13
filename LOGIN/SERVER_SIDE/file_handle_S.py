@@ -27,8 +27,8 @@ class File_man():
         
         text = ""
         for _ in data:
-            text += str(_+'\n')
-        print(f'TEXT_TO_WRITE: \n {text}')      
+            text += str(_)+('\n')
+            print(f'TEXT_TO_WRITE: \n {_}')      
         with open(file_name, rwm) as wf:
             wf.write(text)
             wf.close()
@@ -37,7 +37,7 @@ class File_man():
         pass
     
 
-    def check_file(file_name, user_data):
+    def check_file(file_name, **args):
         path_to_file = file_name
         path = Path(path_to_file)
 
@@ -51,6 +51,7 @@ class File_man():
             print(f'[file exists] : {file_name}')
 #            file_data = File_man.read_file(file_name)
             return True
+        
         else:
             print(f'[file]: {path_to_file} !does_not_exist!\n \nWELCOME_NEW_PLAYER\n')
             os.system('touch key.key')

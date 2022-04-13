@@ -1,0 +1,7 @@
+CLIENT
+Dude
+PASSWORD
+1881
+2
+3
+MALE

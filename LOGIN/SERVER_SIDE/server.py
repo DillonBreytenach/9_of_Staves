@@ -3,17 +3,18 @@ import socket
 from _thread import *
 from threading import Thread, ThreadError
 
+import random
+from random import shuffle
+
 
 import string
 
 from matplotlib.pyplot import table
 
 
-from file_handle import File_man
+from file_handle_S import File_man
 
 import tqdm
-#from kivy.clock import Clock
-
 
 class server():
     def __init__(self, **kwargs):
@@ -30,32 +31,46 @@ class server():
         table = str.maketrans("", "", string.punctuation)
         stripped = [w.translate(table) for w in words]
         
-        if "HELLO".upper() in data:
-            print("HANDSHAKE_INIT", data)
-            return 
+        ##
+        print("[DATA_DECAPPED]:")
+        for x in stripped:
+            print(">",x)
+        print("\n")
+        
+        if stripped[0] == "GAMEBUTTON":
+            cards = ["card1@", "card2@", "card3@", "card4@"]
+            random.shuffle(cards)
+            print("[CARDS]: ", cards)
+            
+            return "CARDS", cards
+
 
 
         if "CLIENT" in data:
             print("[GOT CLIENT]: ", data)
-
-            print("WRITING :", stripped) 
+            print("[WRITING] :", stripped) 
             
             #user_auth
             #DO A STRING COMPARE TO SEE IF THE PASSWORD MATCHES
             # #####!*!*!*!*!*!
 
-            f_check = File_man.check_file("clients/"+str(stripped[1])+".txt", data)
+            f_check = File_man.check_file(str("clients/"+str(stripped[1])+".txt"))
             
             if f_check == True:
-                print("!_[_MISSING_PAGE_TRANSITION_]_!")
+                print("ADD ENCAP FOR RETURN MSG!!]]]")
+                for _ in data:
+
+                    seg = str(_) + "@"
+                    print("SEGs", _)
+                print("SEG: ", seg)
+                return "CLIENT", stripped
                 
                 
             if f_check == False:
                 File_man.write_file("clients/" + str(stripped[1]+".txt"), stripped, 'a')
-            
-                print("CHECKING FILE:  \n   ", File_man.read_file("clients/" + str(stripped[0]+".txt")))
-                
-        
+                print("CHECKING FILE:  \n   ", File_man.check_file("clients/" + str(stripped[1]+".txt")))
+                return "CLIENT", stripped
+
         
         elif "READ".upper() in data:
             re_data = File_man.read_file("clients/" + str(stripped[1]+".txt"))
@@ -72,11 +87,30 @@ class server():
             data = conn.recv(1024 * 3).decode()
             print("\n[DATA]: ", str(data))
             
-            action = self.filter_data(data)
+            action, fdata = self.filter_data(data)
 
 
-            if action:
-                conn.send(str(action).encode())
+            if not action:
+                print("[WAITING FOR CLIENT]")
+
+
+            if "CARDS".upper() in action:
+                print("SENDING: CARDS ")
+
+                print("[ACTION]: ", action)
+
+                #conn.send(str(action).encode())
+                for _ in fdata:
+                    print("CARD: ", _)
+                    conn.send(str(_).encode())
+
+
+            if "CLIENT" in action:
+                for _ in fdata:
+                    print("PROFILE: ", _)
+                    seg = str(_)
+                    conn.send(seg.encode())
+
 
             try:
                 if "DISCONN" in str(data):
@@ -90,18 +124,20 @@ class server():
             if not data:
                 print("\n!!!!!!!!\nNO DATA YET")
                 return
-            else:
-                
-                try:
 
-                    conn.send("GOT_DATA**".encode())
-                    
-                    #m_len = len(self.msg)
-                    #self.msg.append(str(data))
-                    #sending = self.msg[(m_len)]
 
-                except Exception as e:
-                    print("WTF", str(e))
+#            else:
+#                
+#                try:
+#
+#                    conn.send("GOT_DATA**".encode())
+#                    
+#                    #m_len = len(self.msg)
+#                    #self.msg.append(str(data))
+#                    #sending = self.msg[(m_len)]
+#
+#                except Exception as e:
+#                    print("WTF", str(e))
 
 
 
