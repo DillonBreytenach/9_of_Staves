@@ -1,0 +1,154 @@
+#main_widget:
+
+Page_Layout:
+<Page_Layout>:
+    main_widget:
+    Login_Page:
+    Profile_Page:
+
+<main_widget>:
+    Label:
+        text:'INIT'
+
+
+#Login_Page:
+<Login_Page>:
+    orientation: 'vertical'
+
+    #MAIN_LABEL
+    Label:
+        id: in_com
+        pos_hint: {'x': .05, 'y': 1}
+        text:'Login/Register'
+        size_hint: 1, .2
+        
+        
+
+    #USERNAME & PASSWORD
+    TextInput:
+        id: username
+        pos_hint: {'x': .2, 'y': .9}
+        size_hint: .7, .1
+        text: "NAME"
+        multiline: False
+        on_text_validate: root.save_name(self)
+
+    TextInput:
+        id: password
+        pos_hint: {'x': .2, 'y': .7}
+        size_hint: .7, .1
+
+        text: "PASSWORD23"
+        multiline: False
+        on_text_validate: root.save_password(self)
+
+
+
+    #DATE OF BIRTH
+    BoxLayout:
+        pos_hint: {'x': .2, 'y': .5}
+        size_hint: .7, .1
+        TextInput:
+            id: year
+            text:'1992'
+            multiline: False
+            on_text_validate: root.save_year(self)
+
+        TextInput:
+            id: month
+            text:'6'
+            multiline: False
+            on_text_validate: root.save_month(self)
+
+        TextInput:
+            id: day
+            text:'9'
+            multiline: False
+            on_text_validate: root.save_day(self)
+
+
+    #COUNTRY
+    BoxLayout:
+        pos_hint: {'x': .2, 'y': .4}
+        size_hint: .7, .1     
+        TextInput:
+            id: country
+            text:'COUNTRY'
+            multiline: False
+            on_text_validate: root.save_country(self)   
+
+    
+
+    #MALE/FEMALE
+    BoxLayout:
+        pos_hint: {'x': .4, 'y': .3}
+        size_hint: None, .2
+        orientation: 'horizontal'
+        cols: 2
+        BoxLayout:
+            size_hint: None, .5
+            rows: 2
+            orientation:'vertical'
+            Label:
+                id: male_l
+                text: "MALE"
+            CheckBox:
+                id: male_c
+                on_release: False
+                active: False
+                on_active: root.CheckBox_M(self.active)
+                #active: root.male_c
+
+        BoxLayout:
+            size_hint: None, .5
+            orientation: 'vertical'
+            Label:
+                id: female_l
+                text:'FEMALE'    
+            CheckBox:
+                id: female_c
+                active: False
+                on_active: root.CheckBox_F(self.active)
+                #active: root.female
+
+
+    #LOGIN or REGISTER
+    BoxLayout:
+        size_hint: .7, .2
+        pos_hint: {'x': .2, 'y': .5}
+        Button:
+            id: send_data
+            pos_hint: {'x': 0, 'y': .3}
+            size_hint: .5, .4
+
+            text: "LOGIN"
+            on_press: root.save_data()
+
+        Button:
+            id: send_data
+            pos_hint: {'x': .5, 'y': .3}
+            size_hint: .5, .4
+
+            text: "REGISTER"
+            on_press: root.save_data()
+
+
+
+
+<Profile_page>:
+    orientation: 'vertical'
+    rows: 3
+    TextInput:
+        id: fo_dis
+        text:'text'
+        multiline: False
+        on_text_validate: root.data_sending(self)
+
+    Button:
+        id: profile
+        text: "PROFILE"
+        size_hint: 1, 1
+        on_press: root.display_profile()
+    Label:
+        id: Opponent_One
+        text: 'MSG?'
