@@ -1,0 +1,36 @@
+Page_Layout:
+<Page_Layout>:
+    Main_Widget:
+    Game:
+
+<Main_Widget>:
+    orientation: 'vertical'
+    
+    Label:
+        id: MAIN
+        size_hint: 1, None
+        text:'MAIN'
+    TextInput:
+        id: NAME
+        size_hint: 1, None
+        text:'NAME'
+
+
+
+<Game>:
+
+    orientation: 'vertical'
+    cols: 3
+    Label:
+        id: in_com
+        text:'GAME'
+        size_hint: 1, None
+    TextInput:
+        id: data_sending
+        multiline: False
+        text:'TEXT_TO_SEND'
+        on_text_validate: root.send(self)
+
+    Button:
+        id: send_but
+        text: 'SEND'
