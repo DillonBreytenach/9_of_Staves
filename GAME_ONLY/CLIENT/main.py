@@ -3,7 +3,9 @@ from threading import Thread
 import threading
 from kivy.app import App
 from _thread import *
+#FOLDER IMPORTS
 from conns import connections
+from file_handle_C import File_man
 
 
 #UIX IMOPORTS
@@ -23,33 +25,47 @@ from kivy.properties import BooleanProperty
 from kivy.core.window import Window
 
 
-Window.size = (400, 450)
+Window.size = (200, 250)
 
 
 
 class Main_Widget(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.encap = ""
-        self.c = connections()
+        File_man.__init__(self)
+        self.encap = []
+        self.FH = File_man()
+        
+        
 
     def get_name(self, Widget):
-        self.encap = "@NAME@"+Widget.text
-        self.c.send_msg(self.encap)
+        self.encap = ["@", "NAME", "@", Widget.text]
+        print(self.encap)
+        self.FH.write_file("NAME.txt", self.encap, "w")
+        print(self.FH.read_file("NAME.txt"))
+        
+    def read_name(self):
+        return str(self.encap)
+        
 
 
 class Game(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.c = connections()
-        self.encap = ""
-
+        self.M = Main_Widget()
+        #self.cap = ""
+        self.cap = self.M.encap
         
+    def get_name(self):
+        self.M.read_name()    
+    
     def send(self, Widget):
-        data = Widget.text
-        print("TO_SEND: ", data)
-        
-        
+        msg = ""
+        msg = str(Widget.text)
+        print("TO_SEND: ", msg)
+        print("encap:: ", str(self.M.ids.NAME))
+        data = str("MSG@" + msg)
         send = threading.Thread(target=self.c.send_msg, args=(data,))
         send.daemon = True
         send.start()

@@ -5,7 +5,7 @@ Page_Layout:
 
 <Main_Widget>:
     orientation: 'vertical'
-    
+    size_hint: 1, None
     Label:
         id: MAIN
         size_hint: 1, None
@@ -14,7 +14,8 @@ Page_Layout:
         id: NAME
         size_hint: 1, None
         text:'NAME'
-
+        multiline: False
+        on_text_validate: root.get_name(self)
 
 
 <Game>:

@@ -51,9 +51,14 @@ class connections():
     
     def send_msg(self, data):
         msg = ""
-        for _ in data:
-            msg += str(_)
+        if data is str:
+            msg = data
+        else:
+            for _ in data:
+                msg += str(_)
+
         try:
+            print(f'[SEND] {msg}')
             self.sock.send(msg.encode())
             
         except Exception as e:
