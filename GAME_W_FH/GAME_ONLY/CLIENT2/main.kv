@@ -1,0 +1,56 @@
+Page_Layout:
+<Page_Layout>:
+    Main_Widget:
+    Game:
+
+
+<Main_Widget>:
+    orientation: 'horizontal'
+    TextInput:
+        size_hint: 1, .5
+        id: NAME
+        text:'N A M E'
+        multiline: False
+    Button:
+        size_hint: 1, .5
+        id: START
+        text: "START"
+        on_press: root.p_it()
+
+<Game>:
+
+    background_color: 1, 1, 0, 1
+    orientation: 'horizontal'
+    cols: 2
+
+    BoxLayout:
+        size_hint: .4, 1
+        orientation:'vertical'
+        rows: 2
+        BoxLayout:
+            size_hint: .5, None
+            orientation:'vertical'
+            Button:
+                id: OPP_DECK
+                size_hint: 1, None
+                text:'OPP_DECK'
+
+        BoxLayout:
+            size_hint: .5, None
+            orientation:'vertical'
+            Label:
+                id: MY_DECK
+                size_hint: 1, None
+                background_color: 0, 1, 0, 1
+                text:'MY_DECK'
+
+        BoxLayout:
+            size_hint: .5, None
+            orientation:'vertical'
+            Button:
+                id: HIT_ME
+                size_hint: 1, None
+                text:'HIT_ME'
+                on_press: root.what_deck(self, "CARD")# root.test(self, "START")
+
+
