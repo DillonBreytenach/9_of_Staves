@@ -29,21 +29,26 @@ class server():
 
 
 
+
     def set_deck(self, user):
-        DECK = self.D.shuffleDeck()
-        card, DECK = self.D.get_card(user, DECK)
-        print("AFTER:  ",card)
-        trues = 0
-        for card_set in DECK:
-            if card_set[1] == False:
-                print(str(card_set[0]), "IS", str(card_set[1]) )
-            else:
-                print(str(card_set[0]), "IS ", str(card_set[1]), ":by:", str(card_set[2]))
-                trues +=1
-            if trues == 13:
-                print("ALL CARDS USED")
-                return("DONE")
-        return card
+        try:
+            DECK = self.D.shuffleDeck()
+            card, DECK = self.D.get_card(user, DECK)
+            print("AFTER:  ",card)
+            trues = 0
+            for card_set in DECK:
+                if trues == 13:
+                    print("ALL CARDS USED")
+                    return "DONE"
+                if card_set[1] == False:
+                    print(str(card_set[0]), "IS", str(card_set[1]) )
+                else:
+                    print(str(card_set[0]), "IS ", str(card_set[1]), ":by:", str(card_set[2]))
+                    trues +=1
+
+                return card
+        except Exception as e:
+            print("SET_DECK:: ", str(e))
 
 
 
@@ -59,7 +64,7 @@ class server():
 
 
 
-        if "CARD" in data:# or "START" in data: 
+        if "CARD" in data or "START" in data: 
 
             ### 
 #            printt("OBJ :: RUN_TO :: ",)
@@ -80,7 +85,12 @@ class server():
                 conn1.send(ret1.encode())
                 conn2.send(ret2.encode())
             
-            else:
+            elif "DONE":
+                print("DECK DEPLETED")
+                conn1.send("DONE".encode())
+                conn1.send("DONE".encode())
+                conn1.send("DONE".encode())
+                conn1.send("DONE".encode())
                 conn1.send("DONE".encode())
                 conn1.send("DONE".encode())
                 return "DONE"
@@ -164,7 +174,7 @@ class server():
                     self.E.wait()
 
                 else:
-                    if "CARD" in data:
+                    if "CARD" in data or "START" in data:
                         try:
                             print("___TESTING_IMPLEMENTATION___")
                             #CHECK LIST IF CLIENT EXISTS

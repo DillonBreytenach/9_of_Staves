@@ -1,13 +1,9 @@
 #CONNECTION__
 import socket
-
 import time
-import sys
-
 from file_handle_C import File_man
-#import watchdog
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler, FileSystemEventHandler
+import threading
+
 
 #CONNECTION CLASSES
 class connections():
@@ -36,17 +32,18 @@ class connections():
             
     def get_msg(self, **kwargs):
         #WRITE ALL DATA TO FILE
+        
         while True:
             received = ""
             try:
                 received = self.sock.recv(1024 * 3).decode()
-                print("[RECV]: ", str(received), "\n")
-                self.FM.write_file("SERVER.txt", received, "a")
-
-                if not received:
-                    return "WHAT_FO_DIS::NOT RECVD"
+                
+                print("\n\n[RECV]: ", str(received), "\n\n")
+                if "DONE" in received:
+                    self.FM.write_file("SERVER.txt", "", "w")
                 else:
-                    return str(received)
+                    self.FM.write_file("SERVER.txt", received, "a")
+
             except Exception as e:
                 print("[SOCKET CLOSED]")
                 print(str(e)) 
@@ -55,31 +52,58 @@ class connections():
     
     def send_msg(self):
         #READ ALL DATA FROM FILES>>
-        path = "NAME.txt"
-        
-        self.init_data = str(self.FM.read_file(path))
-        print("INIT_DATA:: ", self.init_data)
+        name = "NAME.txt"
+        game = "GAME.txt"
+
+
+        self.name_data = str(self.FM.read_file(name))
+        self.game_data = str(self.FM.read_file(game))
+        #    print(f'READING {file}')
+        print("NAME_DATA:: ", self.name_data)
+        print("GAME_DATA:: ", self.game_data)
  
+
         try:
-            while True:
-                time.sleep(1)
-                data = str(self.FM.read_file(path))
-                print("SENDER DATA:: ", data)
-                if self.init_data != data:
-                    print(f'[SENDING]:: {data}')
-                    self.init_data = data
+            while True:    
+                self.N_data = str(self.FM.read_file(name))
+                #print("SENDER DATA:: ", data)
+                if self.name_data != self.N_data:
+                    print(f'\nB[C]::{self.name_data}\n::\n[SENDING]:: {self.N_data} ')
 
                     try:
-                        self.sock.send(data.encode())
+                        self.name_data = self.N_data
+                    except Exception as e:
+                        print(e)
+                    print(f'\nA[C]::{self.name_data}\n::\n[SENDING]:: {self.N_data} ')
+
+                    try:
+                        self.sock.send(str(self.N_data).encode())
 
                     except Exception as e:
                         print("FUCKUP::SEND_MSG::", str(e))
 
+
+                G_data = str(self.FM.read_file(game))
+                #print("SENDER DATA:: ", data)
+                if self.game_data != G_data:
+                    print(f'[SENDING]:: {G_data}')
+                    self.game_data = G_data
+
+                    try:
+                        self.sock.send(G_data.encode())
+
+                    except Exception as e:
+                        print("FUCKUP::SEND_MSG::", str(e))
+
+
+
+
+
+
+
         except Exception as e:
             print("SENDING_ERROR::", str(e))
-            #observer.stop()
-            #observer.join()
-        
+
 
 
 

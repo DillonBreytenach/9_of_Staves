@@ -15,12 +15,12 @@ class File_man():
         #f_check = File_man.check_file(file_name)
         if file_name:
             try:
-                print(f'[filename]: {file_name}')
+                #print(f'[filename]: {file_name}')
                 with open(file_name, "r") as rf:
                     data = rf.readlines()
                     rf.close()
-                    print("NEW FILE_DATA", str(data))
-                    return data
+                    #print("NEW FILE_DATA", str(data))
+                    return str(data)
             except Exception as e:
                 print(e)
                 
@@ -28,15 +28,14 @@ class File_man():
     
     def write_file(self, file_name, data, rwm):
         text = ""
-        print(f'data to write {data}')
+        #print(f'data to write {data}')
         fc = self.check_file(file_name)
         
         if fc == True:
 
-            for _ in data:
-                text += str(_+'@')
+            text += str(data) + str('@')
 
-            print(f'TEXT_TO_WRITE: \n {text}')      
+            #print(f'TEXT_TO_WRITE: \n {text}')      
             with open(file_name, rwm) as wf:
                 wf.write(text)
                 wf.close()

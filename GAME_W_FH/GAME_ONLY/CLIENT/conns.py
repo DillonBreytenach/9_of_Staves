@@ -2,6 +2,8 @@
 import socket
 import time
 from file_handle_C import File_man
+import threading
+
 
 #CONNECTION CLASSES
 class connections():
@@ -30,12 +32,17 @@ class connections():
             
     def get_msg(self, **kwargs):
         #WRITE ALL DATA TO FILE
+        
         while True:
             received = ""
             try:
                 received = self.sock.recv(1024 * 3).decode()
-                print("[RECV]: ", str(received), "\n")
-                self.FM.write_file("SERVER.txt", received, "a")
+                
+                print("\n\n[RECV]: ", str(received), "\n\n")
+                if "DONE" in received:
+                    self.FM.write_file("SERVER.txt", "", "w")
+                else:
+                    self.FM.write_file("SERVER.txt", received, "a")
 
             except Exception as e:
                 print("[SOCKET CLOSED]")
@@ -54,16 +61,15 @@ class connections():
         #    print(f'READING {file}')
         print("NAME_DATA:: ", self.name_data)
         print("GAME_DATA:: ", self.game_data)
-
+ 
 
         try:
-            while True:
-
+            while True:    
                 self.N_data = str(self.FM.read_file(name))
                 #print("SENDER DATA:: ", data)
                 if self.name_data != self.N_data:
                     print(f'\nB[C]::{self.name_data}\n::\n[SENDING]:: {self.N_data} ')
-                    
+
                     try:
                         self.name_data = self.N_data
                     except Exception as e:

@@ -64,4 +64,6 @@ class Deck():
                 pl = DECK[i][2]
                 r_card = [card_val, card_set, pl]
                 return r_card, DECK
+            else:
+                print("WTF:: deck.DECK.GET_CARD")
             i+=1

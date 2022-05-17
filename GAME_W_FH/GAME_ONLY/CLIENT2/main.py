@@ -25,9 +25,14 @@
 
 #BASE IMPORTS
 from functools import partial
+from gettext import translation
+import string
 
 from threading import Thread
 import threading
+import time
+from unicodedata import name
+from cv2 import sort
 from kivy.app import App
 from _thread import *
 
@@ -38,12 +43,13 @@ from file_handle_C import File_man
 
 
 #UIX IMOPORTS
+from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.pagelayout import PageLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, TransitionBase
 
 
 #FUNTIONAL IMPORTS
@@ -60,169 +66,131 @@ Window.size = (400, 300)
 
 
 
-class Game(BoxLayout):
+class Game(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        #FILE IMPORTS
-        #self.c = connections()
-        self.FM = File_man()
-        
-        #DECK VARIABLES
+        self.name = "NAME_FUCK"
         self.my_deck = []
         self.opp_deck = []
         self.all_cards = []
+        self.play_count = 0
+        
+        self.FM = File_man()
         
 
-                #CREATE ANCHOR LAYOUT:
-        self.anch = BoxLayout(size_hint=(.6, 1))
-        self.add_widget(self.anch)
+        Clock.schedule_interval(self.fodis, .5)
 
-    def get_(self):
-    
-    #GET_ALL_DATA_FROM_FILE
-    
-    
-        card_set = []        
-        
-        while True:
-            rec = self.c.get_msg()
-            if "DONE" in rec:
-                print("ALL CARDS_USED")
-                self.anch.clear_widgets()
-
-            card_set = list(rec.split("@"))
-            print("CARD:SET:  ",card_set)
-            self.all_cards.append(card_set)
-
+    def hit_me(self, instance, data):
+        print(self.name)
+        self.FM.write_file("GAME.txt", str(str(data) + str(self.play_count)), "w")
             
-            if "OPP" in rec:
-                self.opp_deck.append(str(card_set[1]))
-                print("OPP_DECK:: ", self.opp_deck)
-                self.ids.OPP_DECK.text = str(card_set[1])
+        print("PLAY_COUNT:: ", str(self.play_count))
+        self.play_count +=1
 
-            if "MY" in rec:
-                self.my_deck.append(str(card_set[1]))
-                print("MY_DECK:: ", self.my_deck)            
-                self.ids.MY_DECK.text = str(card_set[1])
 
-            else:
-                print("WAITING")
-    
-    def test(self, data, what):
-        #GET CARD DATA FROM FILE (CARDS.TXT)
-        #EVENT TRIGGERS USING WATCHDOG IMPORT
+    def fodis(self, instance):
+        print(":::::", self.name)
+        my_deck = []
+        opp_deck = []
+        #FM = File_man()
+        print("FODIS::")
+#        time.sleep(2)
+        deck = self.FM.read_file("SERVER.txt")
+        print("DECK:: ", deck)
+        if "DONE" in deck:
         
+            self.FM.write_file("SERVER.txt", "", "w")
+
+        deck_list = str(deck)
+        card_set = deck_list.split("@")
+
         
-                #CREATE ANCHOR WIDGETS: FOR EACH CARD
-        print("CARDS ON TABLE: \n >>", self.all_cards )
-
-        self.anch.clear_widgets()
-
-
-        for card_set in self.all_cards:
-            if "OPP_CARD" in card_set:
-                print("OPP's:  ", card_set)
-                c_card = Button(text=card_set[1], pos_hint={'x': 0, 'y': .5}, size_hint=(.4, .3))
-                self.anch.add_widget(c_card)
-            
-            if "MY_CARD" in card_set:
-                print("MY's:   ", card_set)
-                c_card = Button(text=card_set[1], pos_hint={'x': 0, 'y': 0}, size_hint=(.4, .3))
-                self.anch.add_widget(c_card)
+        for i, card in enumerate(card_set):
+            j = i+1
+            print("ITER:: ", card_set[i])
+            if "MY" in card_set[i]:
+                my_deck.append(card_set[j])
+                print("MY DECK:: ", my_deck)
+                #self.ids.My_DECK.text = str(card_set[j])
+                
+            if "OPP" in card_set[i]:
+                opp_deck.append(card_set[j])
+                print("OPP_DECK:: ", opp_deck)
+                #self.ids.OPP_DECK.text = str(card_set[j])
+                
+        self.display_cards(None, opp_deck, my_deck)
 
 
+    def display_cards(self, instance, opp_deck, my_deck):
+        print("instance :", instance)
+        print("OPP_DECK: ", opp_deck)
+        print("MY_DECK:  ", my_deck)
 
-    def what_deck(self, data, what):
+
+    def what_deck(self, what, data):
+        
         #WRITE ALL SEND DATA TO FILE...
-        
-        #self.FM.write_file("GAME.txt", data, "w")
-        
-        deck = list(self.FM.read_file("GAME.txt"))
-        print("DECK ON GAME.txt::::  ", deck)
-        Clock.schedule_once(partial(self.test, ("init")), 0)
 
-        print(f'WHAT_DECK:\n    : {what}\n')
-        print(f'WHAT_DATA:\n    : {data}\n')
-
-        deckin = "CARD"
-        deck = str(deckin)
-        self.send = threading.Thread(target=self.c.send_msg, args=(deck,))
-        self.recv = threading.Thread(target=self.get_)
+        self.FM.write_file("GAME.txt", str(str(data) + str(self.play_count)), "w")
+            
+        print("PLAY_COUNT:: ", str(self.play_count))
+        self.play_count +=1
         
 
-        self.send.daemon = True
-        self.recv.daemon = True
-        
-        self.send.start()
-        self.recv.start()
 
 
-
-
-class Main_Widget(BoxLayout):
+class Main_Widget(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(Main_Widget, self).__init__(**kwargs)
         self.G = Game()
         self.FM = File_man()
 
-        #self.conn = connections()
-        #watch = threading.Thread(target=self.conn.send_msg)
-        #watch.daemon = True
-        #watch.start()
-
-
-
-
-
-        
+    
     def p_it(self):
-        name = ""
-        name = str(self.ids.NAME.text)
-        data = [name]
-        self.FM.write_file("NAME.txt", data, "w")
         #ALL INPUT FOR NAME
         #SAVE NAME TO FILE (NAME.TXT)
-        #MAKE BUTTON SWITCH SCREEN TO GAME SCREEN
-        print("START_BUTTON_HIT:\n:: DOES NOTHING")
+        name = ""
+        name = str(self.ids.NAME.text)
+        self.FM.write_file("NAME.txt", name, "w")
+        self.FM.write_file("GAME.txt", "START", "w")
+        self.FM.write_file("SERVER.txt", "@", "w")
+        print("\n\nSTART_BUTTON_HIT\n\n")
 
-
-class Page_Layout(PageLayout):
+        
+        
+class screen_manager(ScreenManager):
     Main_Widget()
     Game()
-
 
 
 class Main(App):
     title = "9_of_Staves"
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+        #IMPORT CONTROL
+        self.FM = File_man()
         self.conn = connections()
-        watch = threading.Thread(target=self.conn.send_msg)
-        watch.daemon = True
-        watch.start()
-        
-    
+
+        self.FM.write_file("GAME.txt", "", "w")
+        self.FM.write_file("SERVER.txt", "", "w")
+
+
+        self.recv = threading.Thread(target=self.conn.get_msg)
+        self.watch = threading.Thread(target=self.conn.send_msg)
+
+
+        try:
+            self.recv.start()
+            self.watch.start()
+
+        except Exception as e:
+            print(e)
+
+
     def Build(self):
         self.FM = File_man()
-
-
-        self.screen_manager = ScreenManager()
-        
-        self.Game_Page = Game()
-        screen = Screen(name="Game")        
-        screen.add_widget(self.Game_Page)
-        self.screen_manager.add_widget(screen)
-        
-        self.Main_Widget = Main_Widget()
-        screen = Screen(name="Main_Widget")
-        screen.add_widget(self.Main_Widget)
-        self.screen_manager.add_widget(screen)
-
-
-
-        return self.screen_manager
-
+        sm = ScreenManager()
+        return sm
 
 if __name__ == '__main__':
     M = Main()

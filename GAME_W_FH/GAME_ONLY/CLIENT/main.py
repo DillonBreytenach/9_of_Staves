@@ -25,11 +25,13 @@
 
 #BASE IMPORTS
 from functools import partial
+from gettext import translation
 import string
 
 from threading import Thread
 import threading
 import time
+from unicodedata import name
 from cv2 import sort
 from kivy.app import App
 from _thread import *
@@ -41,12 +43,13 @@ from file_handle_C import File_man
 
 
 #UIX IMOPORTS
+from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.pagelayout import PageLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition, TransitionBase
 
 
 #FUNTIONAL IMPORTS
@@ -63,168 +66,119 @@ Window.size = (400, 300)
 
 
 
-class Game(BoxLayout):
+class Game(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        #FILE IMPORTS
-        self.FM = File_man()
-        
-        #DECK VARIABLES
+        self.name = "NAME_FUCK"
         self.my_deck = []
         self.opp_deck = []
         self.all_cards = []
-        
-
-                #CREATE ANCHOR LAYOUT:
-        self.anch = BoxLayout(size_hint=(.6, 1))
-        self.add_widget(self.anch)
-        
-        
-        
-        
-        #__INIT__ DISPLAY
-        #self.sort = threading.Thread(target=self.sort_deck)
-        #self.sort.daemon = True
-        #self.sort.start()
-
-
         self.play_count = 0
         
+        self.opp_hand = BoxLayout(size_hint=(.5, .4), pos_hint={'x': .3, 'y': .6})
+        self.table = BoxLayout(size_hint=(.5, .4), pos_hint={'x': .3, 'y': .3})
+        self.my_hand = BoxLayout(size_hint=(.5, .4), pos_hint={'x': .3, 'y': 0})
+
+        self.add_widget(self.opp_hand)
+        self.add_widget(self.table)
+        self.add_widget(self.my_hand)
+
+        self.FM = File_man()
         
-        
 
+        Clock.schedule_interval(self.fodis, .5)
 
-
-    def display_deck(self):
-        self.anch.clear_widgets()
-
-        for card_set in self.all_cards:
-            if "OPP_CARD" in card_set:
-                print("OPP's:  ", card_set)
-                c_card = Button(text=card_set[1], pos_hint={'x': 0, 'y': .5}, size_hint=(.4, .3))
-                self.anch.add_widget(c_card)
+    def hit_me(self, instance, data):
+        print(self.name)
+        self.FM.write_file("GAME.txt", str(str(data) + str(self.play_count)), "w")
             
-            if "MY_CARD" in card_set:
-                print("MY's:   ", card_set)
-                c_card = Button(text=card_set[1], pos_hint={'x': 0, 'y': 0}, size_hint=(.4, .3))
-                self.anch.add_widget(c_card)
+        print("PLAY_COUNT:: ", str(self.play_count))
+        self.play_count +=1
 
 
- 
-    def sort_deck(self):
-        self.init_deck = []
-        #self.E = threading.Event()
-        
-        #GET CARD DATA FROM FILE (SERVER.TXT)
+    def fodis(self, instance):
+        #FM = File_man()
+        print("FODIS::")
+#        time.sleep(2)
         deck = self.FM.read_file("SERVER.txt")
-        print("TEST:: \n    DECK ON SERVER.txt::::  ", deck)
-
-                #CREATE ANCHOR WIDGETS: FOR EACH CARD
-        #print("CARDS ON TABLE: \n >>", self.all_cards )
-
-        #GET_ALL_DATA_FROM_FILE
+        #print("DECK:: ", deck)
+        if "DONE" in deck:
         
+            self.FM.write_file("SERVER.txt", "", "w")
+
+        deck_list = str(deck)
+        card_set = deck_list.split("@")
+
         
-        
-        
-        #*****BUGS****
-        card_set = []        
-        while True:
-#            self.E.wait()
-            rec = self.FM.read_file("SERVER.txt")
-            deck_list = str(rec)
-            card_set = deck_list.split("@")
-            #print("CARD:SET:  ", card_set)
-            time.sleep(10)
-            print("\n\nCARD_SET::\n::")
-            
-            
-            #*********************************
-            #USE WHILE LOOP TO ITERATE THROUGH CARD_SET AND ASSIGN OPP_DECK AND MY_DECK
-            
-            for card in card_set:
-                #remove punct
-                n_card = card.translate(str.maketrans('', '', string.punctuation))
-                print("\n!CARD::   ", n_card)
-                self.all_cards.append(n_card)
-            
-            
-            if rec == deck:
-                print("WTF")
-                time.sleep(20)
-            #print("SERVER.txt:::: \n    ", rec)
-            
-            
-
-
-            if self.init_deck != rec:
-                print("FOOOOOODIS")
-
-
-
-
-#            card_set = list(rec.split("@"))
-            #print("CARD:SET:  ",card_set)
-            #self.all_cards.append(card_set)
-
-            if "DONE" in rec:
-                print("ALL CARDS_USED")
-                self.FM.write_file("SERVER.txt", "", "w")
-                self.anch.clear_widgets()
-
-         
-            if "OPP" in rec:
-                self.opp_deck.append(str(card_set[1]))
-                print("OPP_DECK:: ", self.opp_deck)
-                self.ids.OPP_DECK.text = str(card_set[1])
-
-            if "MY" in rec:
-                self.my_deck.append(str(card_set[1]))
-                print("MY_DECK:: ", self.my_deck)            
-                self.ids.MY_DECK.text = str(card_set[1])
-
-            else:
+        for i, card in enumerate(card_set):
+            j = i+1
+            #print("ITER:: ", card_set[i])
+            if "MY" in card_set[i]:
+                card_val = str(card_set[j])
+                print("CARD_COMPARE:: ", card_val, self.my_deck)
+                if card_val not in self.my_deck:
+                    self.my_deck.append(card_set[j])
                 
-                print("WAITING")
-                #self.E.wait()
+
+            if "OPP" in card_set[i]:
+                if card_set[j] not in self.opp_deck:
+                    self.opp_deck.append(card_set[j])
+  
+        self.display_cards()
 
 
+    def display_cards(self):
+        
+        self.opp_hand.clear_widgets()
+        self.table.clear_widgets()
+        self.my_hand.clear_widgets()
 
+        print("OPP_DECK: ", self.opp_deck)
+        print("MY_DECK:  ", self.my_deck)
+
+        for card in self.opp_deck:
+            self.opp_hand.add_widget(Button(size=(.1, .4), text=str(card)))
+            print(f'{card} made')
+        
+        for card in self.my_deck:
+            self.my_hand.add_widget(Button(size=(.1, .4), text=str(card)))
+            print(f'{card} made')
 
 
     def what_deck(self, what, data):
-        self.play_count +=1
+        
         #WRITE ALL SEND DATA TO FILE...
 
         self.FM.write_file("GAME.txt", str(str(data) + str(self.play_count)), "w")
             
         print("PLAY_COUNT:: ", str(self.play_count))
-
+        self.play_count +=1
         
 
 
 
-class Main_Widget(BoxLayout):
+class Main_Widget(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(Main_Widget, self).__init__(**kwargs)
         self.G = Game()
         self.FM = File_man()
 
-        
+    
     def p_it(self):
         #ALL INPUT FOR NAME
         #SAVE NAME TO FILE (NAME.TXT)
         name = ""
         name = str(self.ids.NAME.text)
         self.FM.write_file("NAME.txt", name, "w")
-        #MAKE BUTTON SWITCH SCREEN TO GAME SCREEN
-        print("START_BUTTON_HIT:\n:: DOES NOTHING")
+        self.FM.write_file("GAME.txt", "START", "w")
+        self.FM.write_file("SERVER.txt", "@", "w")
+        print("\n\nSTART_BUTTON_HIT\n\n")
 
-
-class Page_Layout(PageLayout):
+        
+        
+class screen_manager(ScreenManager):
     Main_Widget()
     Game()
-
 
 
 class Main(App):
@@ -234,45 +188,27 @@ class Main(App):
         #IMPORT CONTROL
         self.FM = File_man()
         self.conn = connections()
-        self.G = Game()
-        
 
-
-        self.sort = threading.Thread(target=self.G.sort_deck)
-        #self.sort.daemon = True
-        self.sort.start()
-
+        self.FM.write_file("GAME.txt", "", "w")
+        self.FM.write_file("SERVER.txt", "", "w")
 
 
         self.recv = threading.Thread(target=self.conn.get_msg)
-        #self.recv.daemon = True
-        self.recv.start()
-
         self.watch = threading.Thread(target=self.conn.send_msg)
-        #self.watch.daemon = True
-        self.watch.start()
 
+
+        try:
+            self.recv.start()
+            self.watch.start()
+
+        except Exception as e:
+            print(e)
 
 
     def Build(self):
-
-
-        self.screen_manager = ScreenManager()
-        
-        self.Game_Page = Game()
-        screen = Screen(name="Game")        
-        screen.add_widget(self.Game_Page)
-        self.screen_manager.add_widget(screen)
-        
-        self.Main_Widget = Main_Widget()
-        screen = Screen(name="Main_Widget")
-        screen.add_widget(self.Main_Widget)
-        self.screen_manager.add_widget(screen)
-
-
-
-        return self.screen_manager
-
+        self.FM = File_man()
+        sm = ScreenManager()
+        return sm
 
 if __name__ == '__main__':
     M = Main()

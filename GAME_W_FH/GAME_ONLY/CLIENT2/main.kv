@@ -1,56 +1,65 @@
-Page_Layout:
-<Page_Layout>:
+screen_manager:
+<screen_manager>:
+    id: screen_manager
     Main_Widget:
+        id: main
+        name: "Main"
+        manager: screen_manager
     Game:
+        id: game
+        name: "Game"
+        manager: screen_manager
 
 
 <Main_Widget>:
-    orientation: 'horizontal'
-    TextInput:
-        size_hint: 1, .5
-        id: NAME
-        text:'N A M E'
-        multiline: False
-    Button:
-        size_hint: 1, .5
-        id: START
-        text: "START"
-        on_press: root.p_it()
+    name: 'MAIN'
+    BoxLayout:
+
+        orientation: 'horizontal'
+        TextInput:
+            size_hint: 1, .5
+            id: NAME
+            text:'N A M E'
+            multiline: False
+        Button:
+            size_hint: 1, .5
+            id: START
+            text: "START"
+            on_press: root.p_it()
+            on_release: app.root.current = 'Game'
 
 <Game>:
-
-    background_color: 1, 1, 0, 1
-    orientation: 'horizontal'
-    cols: 2
-
     BoxLayout:
-        size_hint: .4, 1
-        orientation:'vertical'
-        rows: 2
-        BoxLayout:
-            size_hint: .5, None
-            orientation:'vertical'
-            Button:
-                id: OPP_DECK
-                size_hint: 1, None
-                text:'OPP_DECK'
+        background_color: 1, 1, 0, 1
+        orientation: 'horizontal'
+        cols: 2
 
         BoxLayout:
-            size_hint: .5, None
+            size_hint: .4, 1
             orientation:'vertical'
-            Label:
-                id: MY_DECK
-                size_hint: 1, None
-                background_color: 0, 1, 0, 1
-                text:'MY_DECK'
+            rows: 2
+            BoxLayout:
+                size_hint: .5, None
+                orientation:'vertical'
+                Button:
+                    id: OPP_DECK
+                    size_hint: 1, None
+                    text:'OPP_DECK'
 
-        BoxLayout:
-            size_hint: .5, None
-            orientation:'vertical'
-            Button:
-                id: HIT_ME
-                size_hint: 1, None
-                text:'HIT_ME'
-                on_press: root.what_deck(self, "CARD")# root.test(self, "START")
+            BoxLayout:
+                size_hint: .5, None
+                orientation:'vertical'
+                Label:
+                    id: MY_DECK
+                    size_hint: 1, None
+                    background_color: 0, 1, 0, 1
+                    text:'MY_DECK'
 
-
+            BoxLayout:
+                size_hint: .5, None
+                orientation:'vertical'
+                Button:
+                    id: HIT_ME
+                    size_hint: 1, None
+                    text:'HIT_ME'
+                    on_press: root.what_deck(self, "CARD")# root.test(self, "START")
