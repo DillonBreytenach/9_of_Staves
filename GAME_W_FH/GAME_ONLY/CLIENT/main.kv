@@ -5,18 +5,40 @@ screen_manager:
         id: main
         name: "Main"
         manager: screen_manager
-    Game:
+    Game_Page:
         id: game
         name: "Game"
         manager: screen_manager
 
+    wtf:
+        id: what_da
+        name: "wtf"
+        manager: screen_manager
+
+<wtf>:
+    BoxLayout:
+        id: what
+        Button:
+            pos_hint: {'x': 0, 'y': 0}
+            size_hint: 1, .5 
+            id: butt
+            text:'text??'
+            on_press: root.what_da()
+
+    BoxLayout:
+        orientation:'vertical'
+        id: new
+        size_hint: .4, .4
 
 <Main_Widget>:
     name: 'MAIN'
     BoxLayout:
-
-        orientation: 'horizontal'
+        md_bg_color: app.theme_cls.bg_dark
+        orientation: 'vertical'
         TextInput:
+            foreground_color: (1,1,1,1)
+            background_color: (0,0,0,1)
+            md_bg_color: app.theme_cls.bg_dark
             size_hint: 1, .5
             id: NAME
             text:'N A M E'
@@ -27,11 +49,16 @@ screen_manager:
             text: "START"
             on_press: root.p_it()
             on_release: app.root.current = 'Game'
+        Button:
+            id: what
+            text: "MAIN_WIDGET IDS:: WORKING??"
+            on_press: app.root.current = 'wtf'
 
-<Game>:
+<Game_Page>:
     BoxLayout:
-        background_color: 1, 1, 0, 1
-        orientation: 'horizontal'
+        id: main
+        #background_color: 1, 1, 0, 1
+        orientation: 'vertical'
         cols: 2
 
         BoxLayout:
@@ -40,7 +67,7 @@ screen_manager:
             rows: 2
             BoxLayout:
                 size_hint: .3, None
-                orientation:'vertical'
+                #orientation:'vertical'
                 Button:
                     id: OPP_DECK
                     size_hint: 1, None
@@ -48,7 +75,7 @@ screen_manager:
 
             BoxLayout:
                 size_hint: .3, None
-                orientation:'vertical'
+                #orientation:'vertical'
                 Label:
                     id: MY_DECK
                     size_hint: 1, None
@@ -57,9 +84,32 @@ screen_manager:
 
             BoxLayout:
                 size_hint: .3, None
-                orientation:'vertical'
+                #orientation:'vertical'
                 Button:
                     id: HIT_ME
                     size_hint: 1, None
                     text:'HIT_ME'
                     on_press: root.what_deck(self, "CARD")# root.test(self, "START")
+
+
+            BoxLayout:
+                id: opphand
+                cols: 1
+                orientation:'horizontal'
+                
+
+            BoxLayout:
+                id: myhand
+                cols: 1
+                orientation:'horizontal'
+                
+        
+
+#<New_Widget>:
+#    BoxLayout:
+#        cols: 1
+#        orientation:'horizontal'
+#        id: Hand
+#        Button:
+#            id: test
+#            text:'test'
