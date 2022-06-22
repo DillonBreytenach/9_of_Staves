@@ -1,0 +1,751 @@
+<Page>:
+    MDFloatLayout:
+        orientation: 'vertical'
+
+
+        Image:
+            pos_hint: {'x': 0.0,'y': -0.2}
+            size_hint: 1.5, 1.5
+            source: "ASSETS/BACKGROUND.jpeg"
+            allow_stretch: True
+
+        Button:
+            text:'9 of Staves'
+            font_size: 29
+            background_normal: 'ASSETS/wood1.jpeg'
+            color: (0, 0, 0, 1)
+            size_hint: .8, .1
+            pos_hint: {'x': 0.105,'y': 0.85}
+
+
+        TextInput:
+            hint_text: "NAME"
+            size_hint: .8, .15
+            pos_hint: {'x': 0.105,'y': 0.65}# 0.2, .4
+
+        Button:
+            text: "START"
+            background_normal: "ASSETS/wood2.jpeg"
+            font_size: 25
+            color: (210/255, 151/255, 32/255, 1)#USE COLOR PICKER
+            size_hint: .8, .20
+            pos_hint: {'x': 0.105,'y': 0.4}# 0.2, .4
+            on_press: root.move()
+
+        Button:
+            id: spc
+            background_normal: "ASSETS/wood2.jpeg"
+            font_size: 25
+            color: (0, 0, 0, 1)
+            text: "SP_CARDS"
+            size_hint: .8, .20
+            pos_hint: {'x': 0.105,'y': 0.1}
+            on_press: root.ads()
+
+<AdsBank>:
+    name: "AdsBank"
+    id: AdsBank
+    MDFloatLayout:
+        Button: 
+            text: "PLAYING_AD"
+            id: back
+            on_press: root.play()
+
+
+
+
+<MainWidget>:
+    name: "MainWidget"
+    id: MainWidget
+    MDFloatLayout:
+        orientation:'vertical'
+        Image:
+            pos_hint: {'x': 0.0,'y': -0.2}
+            size_hint: 1.5, 1.5
+            source: "ASSETS/BACKGROUND.jpeg"
+            allow_stretch: True
+
+        Button:
+            id: OPP
+            background_normal: "ASSETS/wood3.jpeg"
+            text: 'LOBBY'
+            size_hint: .4, .08
+            pos_hint: {'x': 0, 'y': .92}
+
+        Button:
+            id: POINTS
+            background_normal: "ASSETS/wood4.jpeg"
+            text: 'POINTS'
+            size_hint: .4, .08
+            pos_hint: {'x': .4, 'y': .92}
+
+#        Button:
+#            id: SETTINGS
+#            text: "(*)"
+#            background_normal: 'ASSETS/GEAR.jpeg'
+#            size_hint: .15, .09
+#            pos_hint: {'x': 0.85,'y': 0.905}
+#            on_press: root.settings()
+
+
+
+
+
+
+        Button:
+            id: EXTRAone
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+#            disabled: 'True'
+            on_press: root.at_hand("EXTRAone")
+
+        Button:
+            id: EXTRAtwo
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+#            disabled: 'True'
+            on_press: root.at_hand("EXTRAtwo")
+
+        Button:
+            id: EXTRAthree
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            background_normal: "ASSETS/JOKER.jpg"
+#            disabled: 'True'
+            on_press: root.at_hand("EXTRAthree")
+
+
+
+
+
+        #FTR_C comps OPPs
+        Button:
+            id: FTR_ConeOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_ConeOpp")
+
+
+
+        Button:
+            id: FTR_CtwoOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CtwoOpp")
+
+
+
+        Button:
+            id: FTR_CthreeOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CthreeOpp")
+
+
+        Button:
+            id: FTR_CfourOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CfourOpp")
+
+
+
+        Button:
+            id: FTR_CfiveOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CfiveOpp")
+
+
+
+        Button:
+            id: FTR_CsixOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CsixOpp")
+
+
+
+        Button:
+            id: FTR_CsevenOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CsevenOpp")
+
+
+        Button:
+            id: FTR_CeightOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CeightOpp")
+
+        Button:
+            id: FTR_CnineOpp
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("FTR_CnineOpp")
+
+
+
+
+
+
+
+
+        Button:
+            id: EXTRAoneOpp
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            background_normal: "ASSETS/JOKER.jpg"
+            on_press: root.at_hand("EXTRAoneOpp")
+
+        Button:
+            id: EXTRAtwoOpp
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            on_press: root.at_hand("EXTRAtwoOpp")
+
+        Button:
+            id: EXTRAthreeOpp
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 200, 400
+            background_normal: "ASSETS/JOKER.jpg"
+            on_press: root.at_hand("EXTRAthreeOpp")
+
+
+
+
+
+
+
+
+
+        #FTR_C comps
+        Button:
+            id: FTR_Cone
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Cone")
+
+
+
+        Button:
+            id: FTR_Ctwo
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Ctwo")
+
+
+
+        Button:
+            id: FTR_Cthree
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Cthree")
+
+
+        Button:
+            id: FTR_Cfour
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Cfour")
+
+
+
+        Button:
+            id: FTR_Cfive
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Cfive")
+
+
+
+        Button:
+            id: FTR_Csix
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Csix")
+
+
+
+        Button:
+            id: FTR_Cseven
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Cseven")
+
+
+        Button:
+            id: FTR_Ceight
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Ceight")
+
+        Button:
+            id: FTR_Cnine
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            on_press: root.at_hand("FTR_Cnine")
+
+
+
+
+
+
+
+        #SEMI_GEN BUTTONS
+        Button:
+            id: TESTzero
+#            text: "TESTzero"
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTzero")
+
+
+        Button:
+            id: TESTone
+#            text: "TESTone"
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTone")
+
+        Button:
+            id: TESTtwo
+#            text: "TESTtwo  "
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwo")
+
+        Button:
+            id: TESTthree
+#            text: "TESTthree"
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTthree")
+
+        Button:
+            id: TESTfour
+#            text: "TESTfour "
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTfour")
+
+        Button:
+            id: TESTfive
+#            text: "TESTfive "
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTfive")
+
+        Button:
+            id: TESTsix
+#            text: "TESTsix  "
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTsix")
+
+        Button:
+            id: TESTseven
+#            text: "TESTseven"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTseven")
+
+        Button:
+            id: TESTeight
+#            text: "TESTeight"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTeight")
+
+        Button:
+            id: TESTnine
+#            text: "TESTnine"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTnine")
+
+        Button:
+            id: TESTten
+#            text: "TESTten"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTten")
+
+        Button:
+            id: TESTelev
+#            text: "TESTelev"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTelev")
+
+        Button:
+            id: TESTtwelve
+#            text: "TESTtwelve"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwelve")
+
+        Button:
+            id: TESTthirteen
+#            text: "TESTthirteen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirteen")
+
+        Button:
+            id: TESTfourteen
+#            text: "TESTfourteen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourteen")
+
+        Button:
+            id: TESTfivteen
+#            text: "TESTfivteen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfivteen")
+
+        Button:
+            id: TESTsixteen
+#            text: "TESTsixteen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTsixteen")
+
+        Button:
+            id: TESTseventeen
+#            text: "TESTseventeen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTseventeen")
+
+        Button:
+            id: TESTeightteen
+#            text: "TESTeightteen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTeightteen")
+
+        Button:
+            id: TESTnineteen
+#            text: "TESTnineteen"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTnineteen")
+
+        Button:
+            id: TESTtwenty
+#            text: "TESTtwenty"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwenty")
+
+
+        Button:
+            id: TESTtwentone
+#            text: "TESTtwentone"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentone")
+
+
+        Button:
+            id: TESTtwenttwo
+#            text: "TESTtwentwo"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwenttwo")
+
+
+        Button:
+            id: TESTtwentthree
+#            text: "TESTtwentthree"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentthree")
+
+
+        Button:
+            id: TESTtwentfour
+#            text: "TESTtwentfour"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentfour")
+
+
+        Button:
+            id: TESTtwentfive
+#            text: "TESTtwentfive"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentfive")
+
+
+        Button:
+            id: TESTtwentsix
+#            text: "TESTtwentsix"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentsix")
+
+
+        Button:
+            id: TESTtwentseven
+#            text: "TESTtwentseven"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentseven")
+
+        Button:
+            id: TESTtwenteight
+#            text: "TESTtwenteight"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwenteight")
+
+        Button:
+            id: TESTtwentnine
+#            text: "TESTtwentnine"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTtwentnine")
+
+        Button:
+            id: TESTthirty
+#            text: "TESTthirty"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirty")
+
+
+        Button:
+            id: TESTthirtyone
+#            text: "TESTthirtyone"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtyone")
+
+
+        Button:
+            id: TESTthirtytwo
+#            text: "TESTthirtytwo"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtytwo")
+
+
+        Button:
+            id: TESTthirtythree
+#            text: "TESTthirtythree"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtythree")
+
+
+        Button:
+            id: TESTthirtyfour
+#            text: "TESTthirtyfour"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtyfour")
+
+
+        Button:
+            id: TESTthirtyfive
+#            text: "TESTthirtyfive"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtyfive")
+
+
+        Button:
+            id: TESTthirtysix
+#            text: "TESTthirtysix"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtysix")
+
+
+        Button:
+            id: TESTthirtyseven
+#            text: "TESTthirtyseven"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtyseven")
+
+
+        Button:
+            id: TESTthirtyeight
+#            text: "TESTthirtyeight"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtyeight")
+
+
+        Button:
+            id: TESTthirtynine
+#            text: "TESTthirtynine"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTthirtynine")
+
+
+        Button:
+            id: TESTfourty
+#            text: "TESTfourty"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourty")
+
+
+
+        Button:
+            id: TESTfourtyone
+#            text: "TESTfourtyone"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtyone")
+
+
+
+        Button:
+            id: TESTfourtytwo
+#            text: "TESTfourtytwo"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtytwo")
+
+
+
+        Button:
+            id: TESTfourtythree
+#            text: "TESTfourtythree"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtythree")
+
+
+
+        Button:
+            id: TESTfourtyfour
+#            text: "TESTfourtyfour"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtyfour")
+
+
+
+        Button:
+            id: TESTfourtyfive
+#            text: "TESTfourtyfive"
+            size_hint: .17, .18
+            background_size: 1, 1
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtyfive")
+
+
+
+        Button:
+            id: TESTfourtysix
+#            text: "TESTfourtysix"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtysix")
+
+
+
+        Button:
+            id: TESTfourtyseven
+            background_normal: "ASSETS/JOKER.jpg"
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 10, 10
+            on_press: root.at_hand("TESTfourtyseven")
+
+
+
+
+
