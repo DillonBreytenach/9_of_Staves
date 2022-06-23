@@ -1,1 +1,1 @@
-@ELIM&['FTR_CthreeOpp', '&', 'FTR_Cthree', '&']&3@@
+@HAND&TESTfourtyseven@

@@ -92,33 +92,6 @@
 
 
 
-        Button:
-            id: EXTRAone
-            background_size: 1, 1
-            size_hint: .17, .18
-            pos: 70, 10
-#            disabled: 'True'
-            on_press: root.at_hand("EXTRAone")
-
-        Button:
-            id: EXTRAtwo
-            background_size: 1, 1
-            size_hint: .17, .18
-            pos: 70, 10
-#            disabled: 'True'
-            on_press: root.at_hand("EXTRAtwo")
-
-        Button:
-            id: EXTRAthree
-            background_size: 1, 1
-            size_hint: .17, .18
-            pos: 70, 10
-            background_normal: "ASSETS/JOKER.jpg"
-#            disabled: 'True'
-            on_press: root.at_hand("EXTRAthree")
-
-
-
 
 
         #FTR_C comps OPPs
@@ -330,6 +303,31 @@
             on_press: root.at_hand("FTR_Cnine")
 
 
+
+        #SPECIAL PRIVILEGE CARD_WIDGETS
+        Button:
+            id: EXTRAthree
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            background_normal: "ASSETS/JOKER.jpg"
+            on_press: root.check_sp("EXTRAthree")
+
+        Button:
+            id: EXTRAtwo
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            background_normal: "ASSETS/JOKER.jpg"
+            on_press: root.check_sp("EXTRAtwo")
+
+        Button:
+            id: EXTRAone
+            background_size: 1, 1
+            size_hint: .17, .18
+            pos: 70, 10
+            background_normal: "ASSETS/JOKER.jpg"
+            on_press: root.check_sp("EXTRAone")
 
 
 
