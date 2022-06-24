@@ -32,8 +32,9 @@ class connections():
         while True:
             received = ""
             try:
-                received = self.sock.recv(1024 * 6).decode()
+                received = self.sock.recv(1024 * 3).decode()
                 print("[RECV]: ", received, "\n")
+                print("LENB_OF_MSG::", len(received))
                 self.FM.write_file("SERVER.txt", received, "a")
 
             except Exception as e:
