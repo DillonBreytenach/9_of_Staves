@@ -220,7 +220,11 @@ class MainWidget(Screen):
         self.my_point = 0
         self.opp_point = 0
         self.round_out = 0
-
+        self.winner = ""
+        
+        #ELIM_SET
+        self.elim_set = []
+        self.elim_count = 0
 
         #DECK_VARIABLES
         self.CardList = []
@@ -268,12 +272,20 @@ class MainWidget(Screen):
         #UPDATER
         Clock.schedule_interval(self.UPADTE, 1)
 
+
+    def score_track(self):
+        try:
+            for _ in self.ids_l:
+                current_pos = _
+        except Exception as e:
+            print("SCORE_TRACKING_ERROR:: ", str(e))        
+
     #CREATE F_TREE OPP(s)
     def opp_force_tree(self, old_cards, new_card):
         self.check_all()
-        print("OLD:: ", old_cards)
-        print("NEW:: ", new_card)
-        
+        #print("OLD:: ", old_cards)
+        #print("NEW:: ", new_card)
+        print("OPP_FTR\n      |\n     |\n     |\n_________")
         #CLEAR OUT ALL T_M_Bs
         for widget in old_cards:
             self.ids[widget].pos[0] = 300
@@ -297,7 +309,7 @@ class MainWidget(Screen):
                     print(f"\n\n!!{new_card} already in use\n\n!")
                 if new_card not in self.OppCards:
                     self.OppCards.append(new_card)
-                print("OPP_F_FTRE::",str(pos_xy)) 
+                print("!!\nOPP_F_FTRE:pos:",str(pos_xy)) 
                 self.ids[str(new_card)].pos[0] = pos_xy[0]
                 self.ids[str(new_card)].pos[1] = pos_xy[1]
                 self.ids[str(new_card)].disabled = False
@@ -457,6 +469,7 @@ class MainWidget(Screen):
                 print("SPACE ON OPP HAND::", what)
                 if wid not in self.on_Hand_Opp:
                     self.on_Hand_Opp.append(str(wid))
+                    print("on_HAND_OPP:: ", wid)
                 return (what)
     
     #DECK ON TABLE
@@ -482,7 +495,7 @@ class MainWidget(Screen):
                 what[3] = wid
                 return (what)
 
-    #DECK ON TABLE
+    #DECK ON TABLE (OPP)
     def pos_table_opp(self, wid):
         #     SET 
         # opp_TABLE_SPACE
@@ -500,20 +513,6 @@ class MainWidget(Screen):
                 what[3] = wid
                 print("WHAT:TABLE_LIST:->:",what)
                 return (what)
-
-    #DATA_UPDATER_::->SERVER
-    def pos_update(self, move):
-        print("\n***********************************************\nUPDATING")
-
-        try:
-            self.FM.write_file("GAME.txt", move, "w")
-            self.ids.OPP.text='ACTIVE'+'\nOPP_TURN'
-            self.turn = False
-            print("\n\n     *****UPDATED*****\n", move)
-            return "DONE"
-        except:
-            print("POSITION_CHANGE [NOT_UPDATED]")
-            pass
 
     #TODO... maybe
     def settings(self):
@@ -534,7 +533,7 @@ class MainWidget(Screen):
 
     #SHIFT EACH CARD TO MOST LEFT POSITION
     def check_all(self, **args):
-
+        #print("^^^^^^^^^^^^^^^^^^\nCHECK_ALL\n")
 
         #COPY LIST AT HAND::
         #   #CLEAR LIST: -> set_all: False, "USER"
@@ -543,36 +542,29 @@ class MainWidget(Screen):
 
         #CHECK MY_HAND_POS(s)
         try:
-            card_count = 0
-            pos_x = ""
             pos_y = ""
-            pos_ = []
-            #print("CHECKING_MY_HAND::POS_LIST\n******")
-
             #SHIFT USED CARDS TO THE LEFT FUNCTION REQUIRED HERE
             try:
-                #print("!!!\nCLEARING POS_LIST::\n**")
+                #print("MY_HAND::/")
+                #RESET ALL VARIABLES IN LIST(POS)
                 for clr in self.pos_list:
                     clr[2] = False
                     clr[3] = "USER"
-                #print("CLEARED:: \n**")
             except Exception as e:
                 print("CLEARING:POS_LIST:ERROR: ", str(e))
             
             try:
-                #print("RESETTING:: ")
+                #ITERATE THROUGH LIST(BACK_UP)
                 for i, new_c in enumerate(self.on_Hand):
 
-
-                    pos_x  = str(self.ids[str(new_c)].pos[0])
-                    pos_y  = str(self.ids[str(new_c)].pos[1])
-
-
-
-                    pos_ = self.ids[str(new_c)].pos
+                    #
+                    #pos_ = self.ids[str(new_c)].pos
+                    
+                    #GET NEW POS()
                     new_pos = self.pos_list[i]
 
                     try:
+                        #UPDATE LIST(POS)
                         self.pos_list[i][2] = True
                         self.pos_list[i][3] = str(new_c)
                     
@@ -581,6 +573,7 @@ class MainWidget(Screen):
                     except Exception as e:
                         print("SETTING:VALS:POS_LIST::ERROR", str(e))
                     try:
+                        #UPDATE WIDGET POS
                         self.ids[str(new_c)].pos[0] = str(new_pos[0])
                         self.ids[str(new_c)].pos[1] = str(new_pos[1])
 
@@ -599,20 +592,69 @@ class MainWidget(Screen):
 
 
         # my_TABLE_SPACE
+        try:
+            #print("CHECKING TABLE SPACE (MY)")
+            for what in self.table_list:
+                if what[2] == True:
+                    pos_y  = self.ids[str(what[3])].pos[1]
+                    if pos_y != 210:
+                        what[2] = False
+                        what[3] = "USER"
+        except Exception as e:
+            print("CHECK_TABLE_SPACE:MINE:ERROR:: ", str(e))
 
-#        print("CHECKING TABLE SPACE (MY)")
-        for what in self.table_list:
-            if what[2] == True:
-                pos_y  = self.ids[str(what[3])].pos[1]
-                if pos_y != 210:
-                    what[2] = False
-                    what[3] = "USER"
 
-        #CHECK OPP TABLE POS(s)
+
+
+        try:
+            #print("$$$")
+            #CHECK OPP TABLE POS(s)
+            try:
+                #print("CHECKING TABLE SPACE (OPP)")
+                #CLEAR LIST(POS)
+                for clr_opp in self.table_list_opp:
+
+                    clr_opp[2] = False
+                    clr_opp[3] = "USER"
+
+            except Exception as e:
+                print("CHECK_TABLE(OPP)::ERROR", str(e))
+
+            try:
+                #ITERATE THROUGH LIST(BACK_UP)
+                for j, new_op in enumerate(self.on_Table_Opp):
+                    pos_ = self.ids[str(new_op)].pos
+                    new_pos = self.table_list_opp[j]
+                    #print("$$$POS_:OPP:TABLE", new_op, pos_)
+                    try:
+                        self.table_list_opp[j][2] = True
+                        self.table_list_opp[j][3] = str(new_op)
+                        what = []
+                        what = self.ids[str(new_op)].pos
+                    except Exception as e:
+                        print("SETTING:VALS:POS_LIST:OPP:ERROR", str(e))
+                    try:
+                        self.ids[str(new_op)].pos[0] = str(new_pos[0])
+                        self.ids[str(new_op)].pos[1] = str(new_pos[1])
+
+                        #che_po= self.ids[str(new_op)].pos
+                        #print("OPP_TABLE_TABBING:: ", che_po)
+                    except Exception as e:
+                        print(f"SHIFTING:{new_op}:ERROR:: ", str(e))
+            except Exception as e:
+                    print(e)
+                    print("^^RESETTING:OPP_HAND:ERROR:: \n")
+        except Exception as e:
+            print("WHAT WENT WORNG::?", str(e))
+
+
+
+
         for what in self.table_list_opp:
             if what[2] == True:
                 pos_y  = self.ids[str(what[3])].pos[1]
                 if pos_y != 310:
+                    self.on_Table_Opp.remove(str(what[3]))
                     what[2] = False
                     what[3] = "USER"
 
@@ -624,8 +666,10 @@ class MainWidget(Screen):
             if what[2] == True:
                 pos_y  = self.ids[str(what[3])].pos[1]
                 if pos_y != 410 and pos_y != 400:
+                    #self.on_Hand_Opp.remove(str(what[3]))
                     what[2] = False
                     what[3] = "USER"
+                    
 
         #CHECK MY_HAND_POS(s)
         try:
@@ -673,8 +717,6 @@ class MainWidget(Screen):
             except Exception as e:
                 print(e)
                 print("^^RESETTING:MY_HAND:ERROR:: \n")
-
-
         except Exception as e:
             print("FAILED TO RESET MY HAND:: ", str(e))
 
@@ -687,8 +729,34 @@ class MainWidget(Screen):
 
         return
 
+    #DATA_UPDATER_::->SERVER
+    def pos_update(self, move):
+        print("\n***********************************************\nUPDATING\n")
+        print("MOVE_COUNT_::", str(self.round_out))
+        self.round_out+=1
+        
+        
+        
+        
+        
+        
+
+        try:
+            self.FM.write_file("GAME.txt", move, "w")
+            self.ids.OPP.text='ACTIVE'+'\nOPP_TURN'
+            self.turn = False
+            print("\n\n     *****UPDATED*****\n\n*************************************\n", move)
+            return "DONE"
+        except:
+            print("POSITION_CHANGE [NOT_UPDATED]")
+            pass
+
+
     #WHEN CLICKING ON A CARD
     def at_hand(self, *args):
+        ks = []
+        #print(":wtf:", self.elim_set)
+        
         #prod
         widget = str(args[0])
         card = self.ids[widget].background_normal
@@ -701,9 +769,13 @@ class MainWidget(Screen):
             print("NOT_YOUR_TURN")
             return
 
-        if int(y) > 399.0:
-            print("NOT_YOURs")
-            return
+        try:
+            if int(y) >= 399.0:
+                print("NOT_YOURs")
+                return
+        except:
+            print("\n\n\nTHIS IS ANNOYING NOW\n\n!!")
+            pass
 
 
 
@@ -712,13 +784,14 @@ class MainWidget(Screen):
                 #ELEMINATOR&**********************
             try:
                 if self.ids[widget].pos[1] == 310 or self.ids[widget].pos[1] == 210:
+                    
                     print("\n*******************\nBOOMIT\n********************\n")
                     try:
 
                         if len(self.card_at_play) < 2:
                             if widget not in self.card_at_play:
                                 self.card_at_play.append(widget)
-                                self.ids[widget].disabled=True
+#                                self.ids[widget].disabled=True
                                 print(":BOOM_WHAT??",self.card_at_play)
 
                     except Exception as e:
@@ -728,49 +801,64 @@ class MainWidget(Screen):
                         kill_set = []
                         try:
                             for i, c in enumerate(self.card_at_play):
-                                if c in self.MyCards:
-                                    self.MyCards.remove(c)
                                 if c in self.on_Table:
                                     self.on_Table.remove(c)
-                                if c in self.OppCards:
-                                    self.OppCards.remove(c)
-
-
-                                self.group_at_play.append(c)
-                                kill_set.append(c)
-                                kill_set.append("&")
-                                print("\nMOVING: \n  ", c)
-
-                                self.ids[c].pos[0] = 250
-                                self.ids[c].pos[1] = 10
-                                self.ids[c].disbaled = True
-
-
+                                if c in self.on_Table_Opp:
+                                    self.on_Table_Opp.remove(c)
+                                try:
+                                    self.ids[c].pos[0] = 250
+                                    self.ids[c].pos[1] = 10
+                                    new_post = self.ids[c].pos
+                                    print("ELIM_SHIFT:ON_HAND()::: ", str(c), "::", str(new_post))
+                                except Exception as e:
+                                    print("ELIM_SHIFT::ERROR:ON_HAND()::", str(e))
+#                                self.ids[c].disbaled = True
+                                #SWAP OPPs
                                 if "FTR" in c:
                                     print("ELIMINATING AN FTR_::", c)
                                     if "Opp" in c:
                                         print("Opp found",c, "::",i)
                                         c = c[:-3]
                                         print("SWAPPING OPP:: ", c)
+                                        pass
                                     else:
                                         c += "Opp"
                                         print("SWAPPING OPP:: ", c)
-                            print("ELIM POINT TO YOU :)")
-                            self.my_point += 1
-                            print(":ME:  ", self.my_point, "\n:OPP:  ", self.opp_point)
-                            ####MARSHMELLO
-                            data = str("@ELIM&"+str(kill_set)+"&"+str(self.my_point)+"@")
-                            #NOW UPDATE SERVER
-                            self.FM.write_file("GAME.txt", data, "w")
-                            self.card_at_play.clear()
+                                self.group_at_play.append(c)
+                                kill_set.append(c)
+                                kill_set.append("&")
+                                print("\nMOVING: \n  ", c)
 
-                            self.ids.OPP.text='ACTIVE'+'\nOPP_TURN'
-                            self.turn = False 
-                            return                
+                                        
                         except Exception as e:
-                            print("ELIM_ERROR:OPP:", str(e))                
+                            print("ELIM_ERROR:OPP:", str(e))     
+                        #ADD CARDS TO ELIM_SET
+                        try:
+                            ks = [self.elim_count, str(self.card_at_play[0]), str(self.card_at_play[1]) ]
+                            self.elim_count+=1
+                            print("#*#*#*#::\n::ELIMINATED CARDS:KS: ", ks, "\n\n#*#*#*#*#\n",self.elim_set)
+                            self.elim_set.append(ks)
+                            self.group_at_play.clear()
+                            for _ in self.elim_set:
+                                print(f"ELIM_SET::", str(_))
+                        except Exception as e:
+                            print("WTF_ELIM:: ", str(e))
+                        print("ELIM POINT TO YOU :)")
+                        self.my_point += 1
+                        print(":ME:  ", self.my_point, "\n:OPP:  ", self.opp_point)
+                        self.ids.OPP.text='ACTIVE'+'\nOPP_TURN'
+                        self.turn = False 
+                        self.card_at_play.clear()
+                        #NOW UPDATE SERVER
+
+                        data = str("@ELIM&"+str(kill_set)+"&"+str(self.my_point)+"@")
+                        self.pos_update(data)
+                        return
+
+
             except Exception as e:
                 print("ELEM", str(e))
+
 #_______________________________________________________________________
                 #ELEMINATOR&**********************
             
@@ -854,7 +942,9 @@ class MainWidget(Screen):
 
     # MAIN BACKGROUND THREAD
     def UPADTE(self, *args):
+        
         #PRELIM_CHECKS
+        self.score_track()
         self.check_all()
         self.f_tree()
 
@@ -863,50 +953,57 @@ class MainWidget(Screen):
         sp_cards = str(self.FM.read_file("ADS_BANK.txt"))
         #print("SP_CARDS::: ", sp_cards)
         spc = sp_cards.translate(str.maketrans('','',"@"))
-
-
         self.ids.POINTS.text="MY_POINTS:"+str(self.my_point)+"\nOPP_POINTS:"+str(self.opp_point)
-        if "ONE" in sp_cards or "ONE" in spc:
-            self.ids['EXTRAthree'].background_normal = "ASSETS/JOKER.jpg"
-            self.ids['EXTRAthree'].disbaled=False
-            self.sp1_active = True
-            print("SP_CARD_1: ACTIVE")
-
-        if "TWO" in sp_cards:
-            self.ids['EXTRAtwo'].background_normal = "ASSETS/JOKER.jpg"
-            self.ids['EXTRAtwo'].disabled=False
-            self.sp2_active = True
-            print("SP_CARD_2: ACTIVE")
-
-        if "THREE" in sp_cards:
-            self.ids['EXTRAone'].background_normal = "ASSETS/JOKER.jpg"
-            self.ids['EXTRAone'].disabled=False
-            self.sp3_active = True
-            print("SP_CARD_3: ACTIVE")
 
         try:
-            source = 'ASSETS/JOKER.jpg'
-            self.ids['EXTRAthree'].background_normal = source
+            if "ONE" in sp_cards or "ONE" in spc:
+                self.ids['EXTRAthree'].background_normal = "ASSETS/JOKER.jpg"
+                self.ids['EXTRAthree'].disbaled=False
+                self.sp1_active = True
+                print("SP_CARD_1: ACTIVE")
+
+            if "TWO" in sp_cards:
+                self.ids['EXTRAtwo'].background_normal = "ASSETS/JOKER.jpg"
+                self.ids['EXTRAtwo'].disabled=False
+                self.sp2_active = True
+                print("SP_CARD_2: ACTIVE")
+
+            if "THREE" in sp_cards:
+                self.ids['EXTRAone'].background_normal = "ASSETS/JOKER.jpg"
+                self.ids['EXTRAone'].disabled=False
+                self.sp3_active = True
+                print("SP_CARD_3: ACTIVE")
+
+            try:
+                source = 'ASSETS/JOKER.jpg'
+                self.ids['EXTRAthree'].background_normal = source
+            except Exception as e:
+                print("IMAGE_MOUNTING_ERROR::: ", str(e))  
         except Exception as e:
-            print("IMAGE_MOUNTING_ERROR::: ", str(e))  
+            print("SP_CARDS_SETUP::EROR", str(e))
+
 
         #DECK CREATION
-        dck = 0
-        cards = []
-        for key, val in self.ids.items():
-            if "TEST" in str(key):
-                if key not in self.ids_l:
-                    self.ids_l.append(key)
-                    print("LISTING:: ", key, "::TEST_#")
-            if "FTR" in str(key):
-                if "Opp" not in str(key):
-                    if key not in self.ftr_c_s:
-                        print("LISTING:: ", key, "::FTR_C_S")
-                        self.ftr_c_s.append(key)
-                if "Opp" in str(key):
-                    if key not in self.ftr_c_opp:
-                        print("LISTING:: ", key, "::FTR_C_OPP")
-                        self.ftr_c_opp.append(key)
+        try:
+            dck = 0
+            cards = []
+            for key, val in self.ids.items():
+                if "TEST" in str(key):
+                    if key not in self.ids_l:
+                        self.ids_l.append(key)
+                        print("LISTING:TEST: ", key, "::TEST_#")
+                if "FTR" in str(key):
+                    if "Opp" not in str(key):
+                        if key not in self.ftr_c_s:
+                            print("LISTING:FTR:MINE: ", key, "::FTR_C_S")
+                            self.ftr_c_s.append(key)
+                    if "Opp" in str(key):
+                        if key not in self.ftr_c_opp:
+                            print("LISTING:FTR:_OPP: ", key, "::FTR_C_OPP")
+                            self.ftr_c_opp.append(key)
+        except Exception as e:
+            print("DECK_CREATAION ERROR:: ", str(e))
+
         deck = self.FM.read_file("SERVER.txt")
         deck_list = str(deck)
         card_set = deck_list.split("@")
@@ -971,6 +1068,8 @@ class MainWidget(Screen):
             except Exception as e:
                 print("SETTING_DECK_ERROR", str(e))
 
+
+
             #UPDATE MOVEMENTS (HAND_)
             try:                
                 if "HAND" in fc:
@@ -1017,64 +1116,64 @@ class MainWidget(Screen):
             #UPDATE MOVEMENTS (ELIM_)
             try:
                 if "ELIM" in fc:
+                    for _ in self.elim_set:
+                        print("ELIM'D_CARD::", str(_))
                     elim = fc.split("&")
-                    for _ in elim:
-                        kill = _.translate(str.maketrans('','',' '))                
-                        print("ELIM::::     ", kill)
-
+                    print("ELIM???????\nSPLIT(&):: ", str(elim))
+                    try:
+                        wid_01 = str(elim[1])
+                        wid_02 = str(elim[2])
+                        
+                        wid_1 = wid_01.translate(str.maketrans('','',' '))
+                        wid_2 = wid_02.translate(str.maketrans('','',' '))
+                                                
+                        print(f"WID_1:{wid_1}\nWID_2:{wid_2}")
+                        #REMOVE WIDS -> off all Lists
                         try:
-                            if val in self.OppCards:
-                                self.OppCards.remove(val)
-                            if val in self.table_list_opp:
-                                self.table_list_opp.remove(val)
-                            if val in self.on_Table:
-                                self.on_Table.remove(val)
-                            if val in self.OppCards:
-                                self.MyCards.remove(val)
-                        except:
-                            print("ELIM::   ##CLEANING_CARDLIST_ERROR##\n")
-                        try:
-                            for ftr in self.ftr_c_s:
-                                if str(ftr) in kill:
-                                    print("KK::", kill, ftr)
-                                    self.ids[ftr].pos[0] = 250
-                                    self.ids[ftr].pos[1] = 411
-                                    self.ids[ftr].disabled=True
-                                    
-                                    #DOUBLE CHECK
-                                    
-                                    x_ = self.ids[ftr].pos[0]
-                                    y_ = self.ids[ftr].pos[1]
-                                    print("ELIM:ftr_c_s: \n     ",str(ftr), "::", x_, ":", y_)
 
-                            for ftr_op in self.ftr_c_opp:
-                                if str(ftr_op) in kill:
-                                    self.ids[ftr_op].pos[0] = 250
-                                    self.ids[ftr_op].pos[1] = 411
-                                    self.ids[ftr_op].disabled=True
-                                    print("ELIM:ftr_c_opp: ", str(ftr_op))
+                            try:
+                                if wid_1 in self.on_Table:
+                                    self.on_Table.remove(wid_1)
+                                if wid_2 in self.on_Table:
+                                    self.on_Table.remove(wid_2)
+                            except Exception as e:
+                                print("ELIM:myTable_REM:ERROR", str(e))
 
-                                    #DOUBLE CHECK
-                                    
-                                    x_ = self.ids[ftr_op].pos[0]
-                                    y_ = self.ids[ftr_op].pos[1]
-                                    print("ELIM:ftr_c_s: \n     ", str(ftr_op), "::", x_, ":", y_)
+                            try:
+                                if wid_1 in self.on_Table_Opp:
+                                    self.on_Table_Opp.remove(wid_1)
+                                if wid_2 in self.on_Table_Opp:
+                                    self.on_Table_Opp.remove(wid_2)
+                            except Exception as e:
+                                print("ELIM:OppTable_REM:ERROR", str(e))
 
-                            for val in self.ids_l:
-                                if str(val) in kill:
-                                    self.ids[val].pos[0] = 250
-                                    self.ids[val].pos[1] = 411
-                                    self.ids[val].disabled=True
-                                    print("ELIM:ids_l: ", val)
-                                    
-                                    #DOUBLE CHECK
-                                    
-                                    x_ = self.ids[val].pos[0]
-                                    y_ = self.ids[val].pos[1]
-                                    print("ELIM:ftr_c_s: \n     ", val, "::", x_, ":", y_)
-                           
+
                         except Exception as e:
-                            print("UPDATING_ELIM_ERROR:::", str(e))
+                            print("ELIM_LIST_REM::ERROR", str(e))
+                        #REMOVE WIDS -> off table
+                        try:                            
+                            self.ids[wid_1].pos[0] = 250
+                            self.ids[wid_1].pos[1] = 411
+                            
+
+                            
+                            self.ids[wid_2].pos[0] = 250
+                            self.ids[wid_2].pos[1] = 411
+
+                            wid_1_test = self.ids[wid_1].pos
+                            
+                            wid_2_test = self.ids[wid_2].pos
+                            
+                            print(f"$%$% NEW_POS    \n{wid_1}::{str(wid_1_test)}\n{wid_2}::{str(wid_2_test)}")
+
+                        except Exception as e:
+                            print("ELIM_SHIFT::ERROR", str(e))              
+                    except Exception as e:
+                        print("ELIM:::ERROR", str(e))
+
+
+
+
 
                     self.ids.OPP.text='ACTIVE'+'\nYOUR_TURN'
                     self.turn = True
