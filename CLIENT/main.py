@@ -221,6 +221,8 @@ class MainWidget(Screen):
         self.opp_point = 0
         self.round_out = 0
         self.winner = ""
+
+        self.END = False
         
         #ELIM_SET
         self.elim_set = []
@@ -273,10 +275,106 @@ class MainWidget(Screen):
         Clock.schedule_interval(self.UPADTE, 1)
 
 
+
+    def home_it(self):
+        
+        self.pos_update("QUIT")
+        MDApp.get_running_app().root.current = 'Page'
+
+
+    def home(self):
+        print("GO_HOME")
+        MDApp.get_running_app().root.current = 'Page'
+
+
     def score_track(self):
+        deck_count = 0
+        opp_table_count = 0
+        table_count = 0
+        print("****************************\nSCORE_TRACKER\n****************************")
         try:
-            for _ in self.ids_l:
-                current_pos = _
+            #COUNT TO SEE IF DECK IS EMPTY
+            for id_ in self.ids:
+                pos_ = self.ids[id_].pos
+                if pos_[0] == 10 and pos_[1] == 10:
+                    deck_count += 1
+                else:
+                    pass
+
+            ##
+            #CHECK TABLEs.. (IF EITHER IS EMPTY)
+            for op_t in self.on_Table_Opp:
+                opt_p = self.ids[op_t].pos
+                if opt_p[1] == 310:
+                    opp_table_count +=1
+                else:
+                    pass
+            for my_t in self.on_Table:
+                myt_p = self.ids[my_t].pos
+                if myt_p == 210:
+                    table_count +=1
+                else:
+                    pass
+
+
+
+            #CHECK COUNTS
+            if opp_table_count > 0:
+                print("OPP_TABLE_COUNT::", str(opp_table_count))
+                return
+
+            if table_count > 0:
+                print("OPP_TABLE_COUNT::", str(table_count))
+                return
+
+            if deck_count > 0:
+                print("DECK_COUNT:::", str(deck_count))
+                return
+            
+            
+            #CHECK IF GAME IS OVER
+            if deck_count < 1:
+                print("DECK_EMPTY")
+                if opp_table_count < 1 or opp_table_count < 1:
+                    print("\nGAME_OVER :P")
+                    self.END = True
+                    #CHHECK WHO WON
+                    if self.my_point == self.opp_point:
+                        print("TIE")
+                        self.ids['OPP'].text = "GAME_OVER\n!!TIE!!"
+                        self.ids['Score_it'].text = "GAME_OVER\n!!TIE!!"
+                        try:
+                            self.ids['Score_it'].pos[0] = 0
+                        except Exception as e:
+                            print("TIE:ERROR", str(e))
+                        self.FM.write_file("game_over.txt", "WINNER", "w")
+#                        self.pos_update("END@TIE")
+
+                    if self.my_point > self.opp_point:
+                        print("#*#*#*#*#$$$$$$$\n\n!!!YOU_WIN!!!\n")
+                        self.ids['OPP'].text = "GAME_OVER\n!!YOU_WIN!!"
+                        self.ids['Score_it'].text = "GAME_OVER\n!!YOU_WIN!!"
+
+                        try:
+                            self.ids['Score_it'].pos[0] = 0
+                        except Exception as e:
+                            print("WIN:ERROR", str(e))
+
+                        self.FM.write_file("game_over.txt", "WINNER", "w")
+ #                       self.pos_update("END@YOU_LOOSE")
+
+                    if self.my_point < self.opp_point:
+                        print("#*#*#*#*#$$$$$$$\n\n!!!YOU_LOOSE!!!\n")
+                        self.ids['OPP'].text = "GAME_OVER\n!!YOU_LOST!!"
+                        self.ids['Score_it'].text = "GAME_OVER\n!!YOU_LOST!!"
+
+                        try:
+                            self.ids['Score_it'].pos[0] = 0
+                        except Exception as e:
+                            print("LOOSE:ERROR", str(e))
+                        self.FM.write_file("game_over.txt", "LOOSER", "w")
+  #                      self.pos_update("END@YOU_WIN")
+
         except Exception as e:
             print("SCORE_TRACKING_ERROR:: ", str(e))        
 
@@ -751,7 +849,6 @@ class MainWidget(Screen):
             print("POSITION_CHANGE [NOT_UPDATED]")
             pass
 
-
     #WHEN CLICKING ON A CARD
     def at_hand(self, *args):
         ks = []
@@ -939,7 +1036,6 @@ class MainWidget(Screen):
 
 #______________________________________________________________
 #########    AUTO  UPDATE FUNCTIONALITY  ################
-
     # MAIN BACKGROUND THREAD
     def UPADTE(self, *args):
         
@@ -1008,6 +1104,10 @@ class MainWidget(Screen):
         deck_list = str(deck)
         card_set = deck_list.split("@")
 
+        if "END" in card_set:
+            print("*#*#*#*#*#*#**#*#*#*#*#*#**#*#*#**#*#*#**#*#")
+            print("CARD_SET::: ", str(card_set[0]), str(card_set[1]))
+
         if len(card_set) > 2:
             
             print("***************************\nINCOMING UPDATE\n******************************")
@@ -1019,6 +1119,13 @@ class MainWidget(Screen):
             #SET_UP
             try:
                 card = fc.translate(str.maketrans('','',"@"))
+
+
+
+                if "QUIT" in card:
+                    print("OPPONENT_QUIT")
+                    MDApp.get_running_app().root.current = 'Page'
+
 
                 #READ ALL CARD VALUES AND ->> IDS
                 if "CARD" in card:
@@ -1218,13 +1325,14 @@ class MainWidget(Screen):
         except Exception as e:
             print(str(e), "OPP_SHIFT_ERROR")
 
-
 class Score(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
-
-    def score(self):
-        pass
+        self.FM = File_man()
+        win = str(self.FM.read_file("game_over.txt"))
+        print("WIN:?0", win)
+        self.ids['back'].text = str(win)
+        print("DONE")
 
 class AdsBank(Screen):
     def __init__(self, **kw):
@@ -1243,8 +1351,6 @@ class Page(Screen):
         self.sp_cards = ["0","1","2","3"]
         self.ads_bank = ""
         self.ads_count = 0
-#        self.ids['spc'].text = "SP_CARDS: "+str(self.ads_count)
-
     def move(self):
         print("[GAME_STARTED]")
         MDApp.get_running_app().root.current ="MainWidget"
@@ -1295,7 +1401,14 @@ class MyMDApp(MDApp):
     def build(self):
         #REMEMBER TO UPDATE ALL FILES ON STARTUP
         Builder.load_file("main.kv")
+
         self.screenM = ScreenManager()
+
+        self.SC = Score()
+        screen = Screen(name="Score")
+        screen.add_widget(self.SC)
+        self.screenM.add_widget(screen)
+
         self.MW = MainWidget()
         screen = Screen(name="MainWidget")
         screen.add_widget(self.MW)
@@ -1311,7 +1424,9 @@ class MyMDApp(MDApp):
         screen.add_widget(self.P)
         self.screenM.add_widget(screen)
         self.screenM.current="Page"
+
         return self.screenM
+
 if __name__=="__main__":
     M = MyMDApp()
     M.run()

@@ -51,13 +51,22 @@
             on_press: root.play()
 
 
-
+<Score>:
+    name: "Score"
+    id: Score
+    Button:
+        id: back
+        text:'GAME_OVER'
+        on_press: root.home()
 
 <MainWidget>:
     name: "MainWidget"
     id: MainWidget
     MDFloatLayout:
+
         orientation:'vertical'
+
+    
         Image:
             pos_hint: {'x': 0.0,'y': -0.2}
             size_hint: 1.5, 1.5
@@ -77,15 +86,13 @@
             text: 'POINTS'
             size_hint: .4, .08
             pos_hint: {'x': .4, 'y': .92}
-
-#        Button:
-#            id: SETTINGS
-#            text: "(*)"
-#            background_normal: 'ASSETS/GEAR.jpeg'
-#            size_hint: .15, .09
-#            pos_hint: {'x': 0.85,'y': 0.905}
-#            on_press: root.settings()
-
+        
+        Button:
+            id: QUIT
+            text: "QUIT"
+            size_hint: .15, .1
+            pos: 240, 500
+            on_press: root.home_it()
 
 
 
@@ -799,3 +806,11 @@
             background_normal: "ASSETS/JOKER.jpg"
             on_press: root.check_sp("EXTRAone")
 
+
+        Button:
+            id: Score_it
+            background_size: 1, 1
+            size_hint: 1, 1
+            pos: 470, 10
+            background_normal: "ASSETS/JOKER.jpg"
+            on_press: root.home()
