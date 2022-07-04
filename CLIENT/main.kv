@@ -1,4 +1,19 @@
-<Page>:
+<LR>:
+    MDFloatLayout:
+        Button:
+            id: Login
+            text: 'LOGIN'
+            size_hint: 1, .5
+            pos_hint: {'x': 0.0,'y': 0.5}
+            on_press: root.Login()
+        Button:
+            id: Register
+            text: "REGISTER"
+            size_hint: 1, .5
+            pos_hint: {'x': 0.0,'y': 0.0}
+            on_press: root.Register()
+
+<Home>:
     MDFloatLayout:
         orientation: 'vertical'
 
@@ -14,21 +29,23 @@
             background_normal: 'ASSETS/wood1.jpeg'
             color: (0, 0, 0, 1)
             size_hint: .8, .1
-            pos_hint: {'x': 0.105,'y': 0.85}
+            pos_hint: {'x': 0.105,'y': 0.9}
+            on_press: root.LR()
 
-
-        TextInput:
-            hint_text: "NAME"
-            size_hint: .8, .15
-            pos_hint: {'x': 0.105,'y': 0.65}# 0.2, .4
+        Button:
+            id: Player
+            text:'PLAYER'
+            size_hint: .8, .2
+            pos_hint: {'x': 0.105,'y': 0.6}
+            on_press: root.on_start()
 
         Button:
             text: "START"
             background_normal: "ASSETS/wood2.jpeg"
             font_size: 25
             color: (210/255, 151/255, 32/255, 1)#USE COLOR PICKER
-            size_hint: .8, .20
-            pos_hint: {'x': 0.105,'y': 0.4}# 0.2, .4
+            size_hint: .8, .2
+            pos_hint: {'x': 0.105,'y': 0.3}# 0.2, .4
             on_press: root.move()
 
         Button:
@@ -38,11 +55,92 @@
             color: (0, 0, 0, 1)
             text: "SP_CARDS"
             size_hint: .8, .20
-            pos_hint: {'x': 0.105,'y': 0.1}
+            pos_hint: {'x': 0.105,'y': 0.01}
             on_press: root.ads()
 
+
+<Register>:
+    MDFloatLayout:
+        Button:
+            text: "REGISTER_PAGE"
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.8}
+
+        TextInput:
+            id: Name
+            hint_text: 'NAME'
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.6}
+
+        TextInput:
+            id: Birth_Date
+            hint_text: 'Birth_Date'
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.4}
+
+        TextInput:
+            id: Country
+            hint_text: 'Country'
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.2}
+
+        Button:
+            text: "REGISTER"
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.0}
+            on_press: root.Register()
+
+
+<Login>:
+    MDFloatLayout:
+        Button:
+            text: "REGISTER_PAGE"
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.8}
+
+        TextInput:
+            id: Name
+            hint_text: 'NAME'
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.6}
+
+        TextInput:
+            id: Date
+            hint_text: 'Birth_Date'
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.4}
+        Button:
+            id: Login
+            text: "LOGIN"
+            size_hint: 1, .2
+            pos_hint: {'x': 0.0,'y': 0.2}
+            on_press: root.go()
+
+
+<Lobby>:
+    MDFloatLayout:
+        Button:
+            id: Lobby
+            text: 'READY?'
+            size_hint: 1, .5
+            pos_hint: {'x': 0.0,'y': 0.5}
+            on_press: root.Ready()
+        Button:
+            id: Back
+            text: "BACK"
+            size_hint: 1, .5
+            pos_hint: {'x': 0.0,'y': 0.0}
+            on_press: root.Back()
+
+
+
+<Loading>:
+    MDFloatLayout:
+        Button:
+            text: 'LOADING...'
+            on_press: root.Start()
+
 <AdsBank>:
-    name: "AdsBank"
     id: AdsBank
     MDFloatLayout:
         Button: 
@@ -52,7 +150,6 @@
 
 
 <Score>:
-    name: "Score"
     id: Score
     Button:
         id: back

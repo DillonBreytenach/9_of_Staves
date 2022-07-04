@@ -27,8 +27,21 @@ class connections():
         
 
             
-    def get_msg(self, **kwargs):
+    def get_msg(self, val):
         #WRITE ALL DATA TO FILE
+        if "GET" in val:
+            print("VAL->", val)
+            try:
+                
+                received = self.sock.recv(1024 * 3).decode()
+                print("[RECV]: ", received, "\n")
+                print("LENB_OF_MSG::", len(received))
+                return received
+            except:
+                pass
+        else:
+            pass
+
         while True:
             received = ""
             try:
@@ -43,11 +56,32 @@ class connections():
                 self.sock.close()   
     
     
-    def send_msg(self, **kwargs):
+    def send_msg(self, val):
         #try using events
         print("PPPP")
 #        time.sleep(1)
         #READ ALL DATA FROM FILES>>
+        if 'RUN' not in val:
+            print("GOT DATA", str(val))
+            if "Player" in val:
+                pl_data = "PLAYER@"+str(self.FM.read_file("Player.txt"))
+
+                try:
+                    
+                    self.sock.send(pl_data.encode())
+                    return("DONE")
+                except Exception as e:
+                    print("FUCKUP::SEND_MSG::", str(e))
+
+        else:
+            pass
+
+        if "START" in val:
+            self.sock.send(val.encode())
+        else:
+            pass
+
+
         path = "GAME.txt"
         try:
             self.init_data = str(self.FM.read_file(path))
