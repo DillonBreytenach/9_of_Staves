@@ -33,9 +33,9 @@ class connections():
             print("VAL->", val)
             try:
                 
-                received = self.sock.recv(1024 * 3).decode()
-                print("[RECV]: ", received, "\n")
-                print("LENB_OF_MSG::", len(received))
+                received = self.sock.recv(1024).decode()
+#                print("[RECV]: ", received, "\n")
+#                print("LENB_OF_MSG::", len(received))
                 return received
             except:
                 pass
@@ -45,10 +45,16 @@ class connections():
         while True:
             received = ""
             try:
-                received = self.sock.recv(1024 * 3).decode()
-                print("[RECV]: ", received, "\n")
-                print("LENB_OF_MSG::", len(received))
-                self.FM.write_file("SERVER.txt", received, "a")
+                received = self.sock.recv(1024 * 2).decode()
+ #               print("[RECV]: ", received, "\n")
+ #               print("LENB_OF_MSG::", len(received))
+
+                if "PROFILE" in received:
+                    self.FM.write_file("OppData.txt", received, "w")
+                if "MATCH" in received:
+                    self.FM.write_file("SERVER.txt", received, "a")
+                else:
+                    self.FM.write_file("SERVER.txt", received, "a")
 
             except Exception as e:
                 print("[SOCKET CLOSED]")

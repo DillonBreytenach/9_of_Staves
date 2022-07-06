@@ -61,11 +61,11 @@ class File_man():
             # #####!*!*!*!*!*!
             
             file_data = self.read_file(file_name)
-            print(f'[file exists] : {file_name}')
-            print(f'[FILE_DATA]   : {file_data}')
+            #print(f'[file exists] : {file_name}')
+            #print(f'[FILE_DATA]   : {file_data}')
             return True
         else:
-            print(f'[file]: {path_to_file} !does_not_exist!\n \nWELCOME_NEW_PLAYER\n')
+            #print(f'[file]: {path_to_file} !does_not_exist!\n \nWELCOME_NEW_PLAYER\n')
             os.system('touch ' + file_name)
             return False
 
